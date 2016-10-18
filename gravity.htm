@@ -676,6 +676,7 @@
             ctx.beginPath();
             ctx.moveTo(posX, posY);
             ctx.lineTo(posXto, posYto);
+            ctx.closePath();
             ctx.stroke();
         }
 
@@ -685,11 +686,9 @@
             ctx.setLineDash([0, 0]);
             ctx.beginPath();
             ctx.arc(offsetX + posX, offsetY + posY, radius, 0, 2 * Math.PI, false);
+            ctx.closePath();
             ctx.fillStyle = color;
             ctx.fill();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#003300';
-            ctx.stroke();
         }
 
         //Draws the X Y dahsed AXIS
@@ -698,10 +697,6 @@
             ctx.setLineDash([1, 2]);
             ctx.lineWidth = 1;
             ctx.strokeStyle = "green";
-            ctx.shadowColor = "black";
-            ctx.shadowOffsetX = 0.3;
-            ctx.shadowOffsetY = 0.3;
-            ctx.shadowBlur = 0.4;
             DrawLineNoOffset(0, canvas.height / 2, canvas.width, canvas.height / 2);
             DrawLineNoOffset(canvas.width / 2, 0, canvas.width / 2, canvas.height);
         }
@@ -712,10 +707,6 @@
             ctx.setLineDash([0, 0]);
             ctx.lineWidth = 1;
             ctx.strokeStyle = "red";
-            ctx.shadowColor = "black";
-            ctx.shadowOffsetX = 0.3;
-            ctx.shadowOffsetY = 0.3;
-            ctx.shadowBlur = 0.4;
             DrawLineNoOffset(object_vector_start_x, object_vector_start_y, object_vector_direction_x, object_vector_direction_y);
         }
 
@@ -906,7 +897,7 @@
                 for (var j = 1; j <= obj_per_height; j++)
                 {
                     new_particle = {
-                        color: "red",
+                        color: "black",
                         diameter: 3474000,
                         x: (((canvas.width / obj_per_width) * i) - offsetX) * distance_factor,
                         y: (((canvas.height / obj_per_height) * j) - offsetY) * distance_factor,
@@ -949,7 +940,7 @@
                 for (var j = 1; j <= obj_per_height; j++)
                 {
                     new_particle = {
-                        color: "red",
+                        color: "black",
                         diameter: 3474000,
                         x: (((canvas.height / 4 / obj_per_width) * i) - offsetY / 4) * distance_factor,
                         y: (((canvas.height / 4 / obj_per_height) * j) - offsetY / 4) * distance_factor,
