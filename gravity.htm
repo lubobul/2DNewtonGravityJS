@@ -681,7 +681,7 @@
         }
 
         //Draws an oval object
-        function DrawObjects(posX, posY, radius, color)
+        function DrawObject(posX, posY, radius, color)
         {
             ctx.setLineDash([0, 0]);
             ctx.beginPath();
@@ -1092,10 +1092,14 @@
             }
         }
 
+        var objects_i;
+        var object_to_draw;
         //draw multiple objects
         function DrawMultipleObejcts() {
-            for (var i = 0; i < initObjects.length; i++) {
-                DrawObjects(initObjects[i].x / distance_factor, initObjects[i].y / distance_factor, (initObjects[i].diameter / 2) / size_factor, initObjects[i].color);
+            for (objects_i = 0; objects_i < initObjects.length; objects_i++)
+            {
+                object_to_draw = initObjects[objects_i];
+                DrawObject(object_to_draw.x / distance_factor, object_to_draw.y / distance_factor, (object_to_draw.diameter / 2) / size_factor, object_to_draw.color);
             }
         }
 
