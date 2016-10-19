@@ -764,11 +764,14 @@
 
         function PlanetaryMode()
         {
-            HideTracesOption();
+          
+            ShowTracesOption();
 
             reset_delegate = PlanetaryMode;
 
             ClearSimulationVariables();
+
+            TRACE_LENGTH = 600;
 
             distance_factor = 800000000;
             size_factor = 1000000;
@@ -981,10 +984,10 @@
 
             fps = 0;
 
-            prevTimeLog;
+            TRACE_LENGTH = 180;
 
             elapsedTimeInRealLifePerSec = 86400; //86400 secs = 1 day
-            delta_time;
+
             days = 0;
             addTracePoint = 0;
             initObjects = [];
