@@ -420,8 +420,6 @@
             reset_delegate();
         }
 
-
-
         function ChangeStaticObjectsState()
         {
             static_objects_state = document.getElementById("static-objects").checked;
@@ -1073,20 +1071,23 @@
         var trace;
 
         //Draw multiple traces, trace = [object][trace]
-        function DrawTraces() {
+        function DrawTraces()
+        {
             alpha = 0.0;
 
             fraction = (0.3 / objectTraceStack.length);
 
             //Traces
-            for (var i = 0; i < objectTraceStack.length; i++) {
+            for (var i = 0; i < objectTraceStack.length; i++)
+            {
                 alpha += fraction;
                 ctx.fillStyle = "rgba(0,0,0," + alpha + ")"; //dim trace at tail
 
                 //Trace
                 trace = objectTraceStack[i];
                 //Objects
-                for (var j = 0; j < trace.length; j++) {
+                for (var j = 0; j < trace.length; j++)
+                {
                     DrawPixel(trace[j].x, trace[j].y);
                 }
             }
@@ -1095,7 +1096,8 @@
         var objects_i;
         var object_to_draw;
         //draw multiple objects
-        function DrawMultipleObejcts() {
+        function DrawMultipleObejcts()
+        {
             for (objects_i = 0; objects_i < initObjects.length; objects_i++)
             {
                 object_to_draw = initObjects[objects_i];
@@ -1106,15 +1108,18 @@
         var selected_object_for_stats_index = 0;
 
         //called once per right click on canvas, if object under mouse, select it to show stats, else hide stats
-        function ShowStatsForObject(e) {
+        function ShowStatsForObject(e)
+        {
             var coordinates = GetMouseCoordinates(e);
 
             var r = 0;
 
-            for (var i = 0; i < initObjects.length; i++) {
+            for (var i = 0; i < initObjects.length; i++)
+            {
                 r = Math.sqrt(Math.pow(((initObjects[i].x / distance_factor) - (coordinates.x - offsetX)), 2) + Math.pow(((initObjects[i].y / distance_factor) - (coordinates.y - offsetY)), 2));
 
-                if (r <= (initObjects[i].diameter / size_factor) / 2 + 1) {
+                if (r <= (initObjects[i].diameter / size_factor) / 2 + 1)
+                {
                     selected_object_for_stats_index = i;
 
                     ShowObjectStats();
@@ -1130,14 +1135,16 @@
         var new_object_velocity_factor = 1;
 
         //Inserts a UI selected object into the simulation, calculating direction ad speed proportional to the created drag & drop vector
-        function InsertNewObjectIntoTheSimulation() {
+        function InsertNewObjectIntoTheSimulation()
+        {
             //substracting start x and y from direction x and y to get 0.0 to x.y,
             //have in mind that coordinate system starts from X0/Y0 therefore always X >0 & Y >0 and it is OK to substract coordinates like this
             var polar_coordinates = RectToPolar(object_vector_direction_x - object_vector_start_x, object_vector_direction_y - object_vector_start_y);
 
             var v = (polar_coordinates.r * new_object_velocity_factor); //linear progression of velocity based on vector length (needs to be figured out properly)
 
-            var new_obj = {
+            var new_obj =
+            {
                 color: selected_object.color,
                 diameter: selected_object.diameter,
                 //substracting offset because adding it when rendering
