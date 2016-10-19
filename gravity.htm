@@ -1078,7 +1078,7 @@
             fraction = (0.3 / objectTraceStack.length);
 
             //Traces
-            for (var i = 0; i < objectTraceStack.length; i++)
+            for (var i = 0, len = objectTraceStack.length; i < len; i++)
             {
                 alpha += fraction;
                 ctx.fillStyle = "rgba(0,0,0," + alpha + ")"; //dim trace at tail
@@ -1114,7 +1114,7 @@
 
             var r = 0;
 
-            for (var i = 0; i < initObjects.length; i++)
+            for (var i = 0, len = initObjects.length; i < len; i++)
             {
                 r = Math.sqrt(Math.pow(((initObjects[i].x / distance_factor) - (coordinates.x - offsetX)), 2) + Math.pow(((initObjects[i].y / distance_factor) - (coordinates.y - offsetY)), 2));
 
@@ -1188,7 +1188,7 @@
 
             var traces = [];
 
-            for (var i = 0; i < initObjects.length; i++)
+            for (var i = 0, len = initObjects.length; i < len; i++)
             {
                 if (initObjects[i].v_x != 0 || initObjects[i].v_y != 0)
                 {
