@@ -942,7 +942,7 @@
                 {
                     new_particle = {
                         color: "black",
-                        diameter: 3474000,
+                        diameter: 2474000,
                         x: (((canvas.height / 4 / obj_per_width) * i) - offsetY / 4) * distance_factor,
                         y: (((canvas.height / 4 / obj_per_height) * j) - offsetY / 4) * distance_factor,
                         v_x: 0,
@@ -1089,19 +1089,19 @@
                 //Trace
                 trace = objectTraceStack[i];
                 //Objects
-                for (var j = 0; j < trace.length; j++)
+                for (var j = 0, len_j  = trace.length; j < len_j; j++)
                 {
                     DrawPixel(trace[j].x, trace[j].y);
                 }
             }
         }
 
-        var objects_i;
+        var objects_i, len_object;
         var object_to_draw;
         //draw multiple objects
         function DrawMultipleObejcts()
         {
-            for (objects_i = 0; objects_i < initObjects.length; objects_i++)
+            for (objects_i = 0, len_object = initObjects.length; objects_i < len_object; objects_i++)
             {
                 object_to_draw = initObjects[objects_i];
                 DrawObject(object_to_draw.x / distance_factor, object_to_draw.y / distance_factor, (object_to_draw.diameter / 2) / size_factor, object_to_draw.color);
