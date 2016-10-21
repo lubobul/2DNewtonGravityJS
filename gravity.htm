@@ -1048,9 +1048,16 @@
 
             NewObjectDirectionVector();
 
+            //That's where all dynamic calculations occur, called in a specific order
             if (isSimulationRunning)
             {
-                CalculateDynamics();
+                ////Takes a lot of CPU - enable only for a single object...
+                ////attempting to get long traces when slower
+                if (traceIsOn) CalculateTraces();
+
+                CalculateMultipleObjects();
+
+                days += (delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
             }
 
             DrawMultipleObejcts();
@@ -1167,18 +1174,6 @@
             initObjects.push(new_obj);
         }
 
-        //That's where all dynamic calculations occur, called in a specific order
-        function CalculateDynamics()
-        {
-            ////Takes a lot of CPU - enable only for a single object...
-            ////attempting to get long traces when slower
-            if (traceIsOn) CalculateTraces();
-
-            CalculateMultipleObjects();
-
-            days += (delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
-        }
-
         var objectTraceStack = [];
         //lenght of trace behind objects in number of kept calcukated positions
         var TRACE_LENGTH = 180;
@@ -1239,11 +1234,7 @@
                     tmp_F = undefined;
 
                     //check if an object is static, skip calculations if true
-                    if (currentObject.v_x != 0 || currentObject.v_y != 0)
-                    {
-                        CalculateObjectInteraction(i);
-                    }
-                    else if (!static_objects_state)
+                    if (!static_objects_state || (((currentObject.v_x + currentObject.v_y) != 0) && static_objects_state))
                     {
                         CalculateObjectInteraction(i);
                     }
@@ -1378,10 +1369,7 @@
             //Later I would try and transfer surface area instead
             bigBody.diameter = bigBody.diameter + (affected_area_length/6); 
 
-            return {
-                smallBody: smallBody,
-                bigBody: bigBody
-            };
+            return { smallBody, bigBody };
         }
 
         //Newton's gravitational constant
@@ -1403,7 +1391,7 @@
             var F_x = F * (delta_x / r);
             var F_y = F * (detla_y / r);
 
-            return { F_x, F_y }
+            return { F_x, F_y };
         }
 
         //Calculates new coordinates and velocities of a moving body based on net force and elapsed time
