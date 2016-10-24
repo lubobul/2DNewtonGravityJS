@@ -8,8 +8,23 @@ window.onload = function ()
     offsetY = canvas.height / 2;
 
     InitXYAxis();
+
     SelectObject('moon');
+
     PlanetaryMode();
+
+    LoadAnimationEngine();
+}
+
+var animation_engine;
+
+function LoadAnimationEngine()
+{
+    animation_engine = AnimationEngine();
+
+    animation_engine.Animate(Animate);
+
+    animation_engine.Start();
 }
 
 //Ui controls
@@ -588,13 +603,6 @@ function Particles2()
     setTimeout(PauseUnpause, 100);
 }
 
-var AnimEngine;
-AnimEngine = AnimationEngine();
-
-AnimEngine.Animate(Animate);
-
-AnimEngine.Start();
-
 //Reset simulation variables, including UI linked settings
 function ClearSimulationVariables()
 {
@@ -634,10 +642,10 @@ var addTracePoint = 0;
 //Recursive funtcion called once per frame
 function Animate()
 {
-    UpdateFps(AnimEngine.fps);
+    UpdateFps(animation_engine.fps);
 
     // t - time between calculting new positions
-    t = elapsedTimeInRealLifePerSec * AnimEngine.delta_time;
+    t = elapsedTimeInRealLifePerSec * animation_engine.delta_time;
 
     ClearCanvas();
     InitXYAxis();
@@ -653,7 +661,7 @@ function Animate()
 
         CalculateMultipleObjects();
 
-        days += (AnimEngine.delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
+        days += (animation_engine.delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
     }
 
     DrawMultipleObejcts();
