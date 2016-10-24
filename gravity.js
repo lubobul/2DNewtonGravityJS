@@ -1118,7 +1118,7 @@ function CalculateCollision(bigBody, smallBody, distance)
         smallBody.diameter = smallBody.diameter - affected_radius;
     }
 
-    //Diameter exchange from small ot big body limited to affected_radius/ 10log(affected_radius)
+    //Diameter exchange from small ot big body limited to affected_radius/ 2log(affected_radius)
     //Later I would try and transfer surface area instead
     bigBody.diameter = bigBody.diameter + (affected_radius / (Math.log(bigBody.diameter) / Math.LN2));
 
