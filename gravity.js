@@ -162,6 +162,14 @@ function ResetUiControls()
 
     document.getElementById("object-traces").checked = false;
 
+    document.getElementById("clamped-distance").checked = false;
+
+    document.getElementById("clamped-distance-checkbox-label").innerHTML = "Disabled";
+
+    is_colision_mode_on, document.getElementById("collision").checked = false;
+
+    document.getElementById("object-collision-checkbox-label").innerHTML = "Disabled";
+
     HideObjectStats();
 
     setTimeout(UpdateSpeed, 10);
@@ -527,9 +535,13 @@ function Particles()
 {
     HideTracesOption();
 
-    reset_delegate = Particles;
-
     ClearSimulationVariables();
+
+    is_distance_between_objects_clamped, document.getElementById("clamped-distance").checked = true;
+
+    document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
+
+    reset_delegate = Particles;
 
     elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 20;
 
@@ -560,18 +572,22 @@ function Particles()
         }
     }
 
-    setTimeout(PauseUnpause, 100);
+    PauseUnpause();
 }
 
 function Particles2()
 {
     HideTracesOption();
 
-    reset_delegate = Particles2;
-
     ClearSimulationVariables();
 
-    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 20;
+    is_distance_between_objects_clamped, document.getElementById("clamped-distance").checked = true;
+
+    document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
+
+    reset_delegate = Particles2;
+
+    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 30;
 
     new_object_velocity_factor = 50;
     distance_factor = 1000000;
@@ -600,7 +616,147 @@ function Particles2()
         }
     }
 
-    setTimeout(PauseUnpause, 100);
+    initObjects.push({
+    color : "orange",
+    diameter: 13982200,
+    mass : 1.898e+27,
+    v_x: 15950,
+    v_y: 50,
+    x: -217000000,
+    y: 101000000
+    });
+
+    initObjects.push({
+        color: "orange",
+        diameter: 13982200,
+        mass: 1.898e+27,
+        v_x: -15950,
+        v_y: 50,
+        x: 234000000,
+        y: -102000000
+    });
+
+    PauseUnpause();
+}
+
+function Particles3() {
+
+    ClearSimulationVariables();
+
+    HideTracesOption();
+
+    is_distance_between_objects_clamped, document.getElementById("clamped-distance").checked = true;
+
+    document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
+
+    reset_delegate = Particles3;
+
+    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 40;
+
+    new_object_velocity_factor = 50;
+    distance_factor = 1000000;
+    size_factor = 1000000;
+
+    var obj_per_width = 25;
+    var obj_per_height = 25;
+
+    var new_particle = {};
+
+    for (var i = 1; i <= obj_per_width; i++) {
+        for (var j = 1; j <= obj_per_height; j++) {
+            new_particle = {
+                color: "black",
+                diameter: 2474000,
+                x: (((canvas.height / 4 / obj_per_width) * i) - offsetY / 4) * distance_factor,
+                y: (((canvas.height / 4 / obj_per_height) * j) - offsetY / 4) * distance_factor,
+                v_x: 0,
+                v_y: 0,
+                mass: -7.35 * Math.pow(10, 22)
+            }
+
+            initObjects.push(new_particle);
+        }
+    }
+
+    initObjects.push({
+        color: "orange",
+        diameter: 13982200,
+        mass: -1.898e+27,
+        v_x: 45950,
+        v_y: 50,
+        x: -217000000,
+        y: 101000000
+    });
+
+    initObjects.push({
+        color: "orange",
+        diameter: 13982200,
+        mass: -1.898e+27,
+        v_x: -45950,
+        v_y: 50,
+        x: 234000000,
+        y: -102000000
+    });
+
+    PauseUnpause();
+}
+
+function Particles4() {
+
+    ClearSimulationVariables();
+
+    HideTracesOption();
+
+    is_distance_between_objects_clamped, document.getElementById("clamped-distance").checked = true;
+
+    document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
+
+    document.getElementById("collision").checked = true;
+
+    is_colision_mode_on = true;
+
+    document.getElementById("object-collision-checkbox-label").innerHTML = "Enabled"; 
+
+    reset_delegate = Particles4;
+
+    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 30;
+
+    new_object_velocity_factor = 50;
+    distance_factor = 1000000;
+    size_factor = 1000000;
+
+    var obj_per_width = 25;
+    var obj_per_height = 25;
+
+    var new_particle = {};
+
+    for (var i = 1; i <= obj_per_width; i++) {
+        for (var j = 1; j <= obj_per_height; j++) {
+            new_particle = {
+                color: "black",
+                diameter: 2474000,
+                x: (((canvas.height / 4 / obj_per_width) * i) - offsetY / 4) * distance_factor,
+                y: (((canvas.height / 4 / obj_per_height) * j) - offsetY / 4) * distance_factor,
+                v_x: 0,
+                v_y: 0,
+                mass: -7.35 * Math.pow(10, 22)
+            }
+
+            initObjects.push(new_particle);
+        }
+    }
+
+    initObjects.push({
+        color: "orange",
+        diameter: 13982200,
+        mass: -1.898e+27,
+        v_x: 0,
+        v_y: 0,
+        x: 0,
+        y: 0
+    });
+
+    PauseUnpause();
 }
 
 //Reset simulation variables, including UI linked settings
@@ -623,6 +779,8 @@ function ClearSimulationVariables()
 
     static_objects_state = false;
     statsAreOn = false;
+    is_colision_mode_on = false;
+    is_distance_between_objects_clamped = false;
     
     ResetUiControls();
 }
@@ -765,7 +923,6 @@ function InsertNewObjectIntoTheSimulation()
         object_vector_start_x =
         object_vector_direction_y =
         object_vector_start_y = 0;
-
 
     initObjects.push(new_obj);
 }
@@ -930,22 +1087,22 @@ function CalculateCollision(bigBody, smallBody, distance)
     //checking out if collision occured r0 + r1 < distance
     if ((bigBody.diameter / 2 + smallBody.diameter / 2) < distance) return null;
 
-    var affected_area_length = 0;
+    var affected_radius = 0;
 
     if (bigBody.diameter < distance) //center of small circle is outside the big circle
     {
-        affected_area_length = Math.abs(distance - ((smallBody.diameter / 2) + (bigBody.diameter / 2)));
+        affected_radius = Math.abs(distance - ((smallBody.diameter / 2) + (bigBody.diameter / 2)));
     }
     else if(distance + smallBody.diameter/2 <= bigBody.diameter/2) //the whole small one is inside the big one
     {
-        affected_area_length = smallBody.diameter;
+        affected_radius = smallBody.diameter;
     }
     else// the center of the small is inside the big, but portion of it is outside
     {
-        affected_area_length = Math.abs(((bigBody.diameter / 2) - distance) + (smallBody.diameter / 2));
+        affected_radius = Math.abs(((bigBody.diameter / 2) - distance) + (smallBody.diameter / 2));
     }
 
-    var affected_body_factor = affected_area_length / smallBody.diameter;
+    var affected_body_factor = affected_radius / smallBody.diameter;
 
     var mass_to_transfer = smallBody.mass * affected_body_factor;
 
@@ -958,12 +1115,12 @@ function CalculateCollision(bigBody, smallBody, distance)
     {
         bigBody.mass = bigBody.mass + mass_to_transfer;
         smallBody.mass = smallBody.mass - mass_to_transfer;
-        smallBody.diameter = smallBody.diameter - affected_area_length;
+        smallBody.diameter = smallBody.diameter - affected_radius;
     }
 
-    //Diameter exchange from small ot big body limited to 1/6th since
+    //Diameter exchange from small ot big body limited to affected_radius/ 10log(affected_radius)
     //Later I would try and transfer surface area instead
-    bigBody.diameter = bigBody.diameter + (affected_area_length/6); 
+    bigBody.diameter = bigBody.diameter + (affected_radius / (Math.log(bigBody.diameter) / Math.LN2));
 
     return { smallBody, bigBody };
 }
