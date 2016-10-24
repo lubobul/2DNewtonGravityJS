@@ -537,7 +537,8 @@ function Particles()
 
     ClearSimulationVariables();
 
-    is_distance_between_objects_clamped, document.getElementById("clamped-distance").checked = true;
+    is_distance_between_objects_clamped = true;
+    document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
@@ -581,7 +582,9 @@ function Particles2()
 
     ClearSimulationVariables();
 
-    is_distance_between_objects_clamped, document.getElementById("clamped-distance").checked = true;
+    is_distance_between_objects_clamped = true;
+
+    document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
@@ -645,7 +648,8 @@ function Particles3() {
 
     HideTracesOption();
 
-    is_distance_between_objects_clamped, document.getElementById("clamped-distance").checked = true;
+    is_distance_between_objects_clamped = true;
+    document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
@@ -707,7 +711,8 @@ function Particles4() {
 
     HideTracesOption();
 
-    is_distance_between_objects_clamped, document.getElementById("clamped-distance").checked = true;
+    is_distance_between_objects_clamped = true;
+    document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
