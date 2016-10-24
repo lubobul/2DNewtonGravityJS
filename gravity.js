@@ -12,13 +12,6 @@ window.onload = function ()
     PlanetaryMode();
 }
 
-window.requestAnimFrame = (function (callback) {
-    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-    function (callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
-})();
-
 //Ui controls
 
 function About()
@@ -362,7 +355,7 @@ function ClearCanvas()
 
 var fps_element = document.getElementById("fps");
 //Update fps element
-function UpdateFps()
+function UpdateFps(fps)
 {
     fps_element.innerHTML = "FPS: " + Math.round(fps);
 }
@@ -498,8 +491,6 @@ function PlanetaryMode()
     initObjects.push(body5);
     //initObjects.push(body6);
 
-    isSimulationStopped = true;
-    setTimeout(BeginSimulation, 100);
 }
 
 function Sandbox()
@@ -515,9 +506,6 @@ function Sandbox()
     new_object_velocity_factor = 50;
     distance_factor = 1000000;
     size_factor = 1000000;
-
-    isSimulationStopped = true;
-    setTimeout(BeginSimulation, 100);
 }
 
 function Particles()
@@ -556,9 +544,6 @@ function Particles()
             initObjects.push(new_particle);
         }
     }
-
-    isSimulationStopped = true;
-    setTimeout(BeginSimulation, 100);
 
     setTimeout(PauseUnpause, 100);
 }
@@ -600,35 +585,25 @@ function Particles2()
         }
     }
 
-    isSimulationStopped = true;
-    setTimeout(BeginSimulation, 100);
-
     setTimeout(PauseUnpause, 100);
 }
 
-//Initi drawing function
-function BeginSimulation(isPaused)
-{
-    isSimulationStopped = false;
+var AnimEngine;
+AnimEngine = AnimationEngine();
 
-    var startTime = (new Date()).getTime();
+AnimEngine.Animate(Animate);
 
-    ClearCanvas();
-    InitXYAxis();
-
-    isSimulationRunning = !isPaused;
-    Animate(canvas, ctx, startTime);
-}
+AnimEngine.Start();
 
 //Reset simulation variables, including UI linked settings
 function ClearSimulationVariables()
 {
-    isSimulationStopped = true;
-    isSimulationRunning = false;
+    ClearCanvas();
+    InitXYAxis();
+
+    isSimulationRunning = true;
 
     traceIsOn = false;
-
-    fps = 0;
 
     TRACE_LENGTH = 180;
 
@@ -642,52 +617,27 @@ function ClearSimulationVariables()
     statsAreOn = false;
     
     ResetUiControls();
-
 }
 
-var isSimulationStopped = true;
 var isSimulationRunning = false;
 
 var traceIsOn = false;
 var statsAreOn = false;
 
-var fps = 0;
-
-var prevTimeLog;
-
 //Change this to run simulation faster / slower
 var elapsedTimeInRealLifePerSec = 86400; //86400 secs = 1 day
-var delta_time;
 var days = 0;
 var addTracePoint = 0;
 
+
+
 //Recursive funtcion called once per frame
-function Animate(canvas, ctx)
+function Animate()
 {
-    if (!prevTimeLog)
-    {
-        prevTimeLog = new Date().getTime();
-
-        requestAnimFrame(function ()
-        {
-            Animate(canvas, ctx);
-
-        });
-
-        return;
-    }
-
-    delta_time = (new Date().getTime() - prevTimeLog) / 1000;
-
-    prevTimeLog = new Date().getTime()
-
-    //calc fps
-    fps = 1 / delta_time;
-
-    UpdateFps(fps);
+    UpdateFps(AnimEngine.fps);
 
     // t - time between calculting new positions
-    t = elapsedTimeInRealLifePerSec * delta_time;
+    t = elapsedTimeInRealLifePerSec * AnimEngine.delta_time;
 
     ClearCanvas();
     InitXYAxis();
@@ -703,7 +653,7 @@ function Animate(canvas, ctx)
 
         CalculateMultipleObjects();
 
-        days += (delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
+        days += (AnimEngine.delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
     }
 
     DrawMultipleObejcts();
@@ -712,14 +662,6 @@ function Animate(canvas, ctx)
     if(statsAreOn) UpdateObjectStats()
 
     if (traceIsOn) DrawTraces();
-
-    if (!isSimulationStopped)
-    {
-        requestAnimFrame(function ()
-        {
-            Animate(canvas, ctx);
-        });
-    }
 }
 
 var alpha = 0.0;
