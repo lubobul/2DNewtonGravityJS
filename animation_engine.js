@@ -7,59 +7,56 @@ window.requestAnimFrame = (function (callback) {
 
 function AnimationEngine() {
 
-    var animate_callback;
-    var prev_time_log = undefined;
-    var running = true;
+    this.animate_callback = undefined;
+    this.prev_time_log = undefined;
+    this.running = true;
 
-    var scope = {
+    this.fps = 0;
+    this.delta_time = 0;
+}
+
+AnimationEngine.prototype.SetAnimateCallback = function(callback)
+{
+    this.animate_callback = callback;
+}
+
+AnimationEngine.prototype.Start = function()
+{
+    this.running = true;
+    this.Animate();
+}
+
+AnimationEngine.prototype.Stop = function()
+{
+    this.running = false;
+}
+
+AnimationEngine.prototype.Animate = function()
+{
+    var _this = this;
     
-        Animate: function (callback) {
-            animate_callback = callback;
-        },
-
-        Start: function () 
-        { 
-            running = true;
-            Animate(); 
-        },
-
-        Stop: function ()
-        {
-            running = false;
-        }
-    }
-
-    scope.fps = 0;
-    scope.delta_time = 0;
-    
-    function Animate() {
-    
-        if (!prev_time_log) {
-            prev_time_log = new Date().getTime();
+     if (!this.prev_time_log) {
+            this.prev_time_log = new Date().getTime();
     
             requestAnimFrame(function () {
-                Animate();
-    
+                _this.Animate();  
             });
     
             return;
         }
     
-        scope.delta_time = (new Date().getTime() - prev_time_log) / 1000;
+        this.delta_time = (new Date().getTime() - this.prev_time_log) / 1000;
     
-        prev_time_log = new Date().getTime()
+        this.prev_time_log = new Date().getTime()
     
         //calc fps
-        scope.fps = 1 / scope.delta_time;
+        this.fps = 1 / this.delta_time;
     
-        animate_callback();
+        this.animate_callback();
     
-        if (running) {
+        if (this.running) {
             requestAnimFrame(function () {
-                Animate();
+                _this.Animate();
             });
         }
-    }
-
-    return scope;
 }

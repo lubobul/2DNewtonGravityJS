@@ -20,9 +20,9 @@ var animation_engine;
 
 function LoadAnimationEngine()
 {
-    animation_engine = AnimationEngine();
+    animation_engine = new AnimationEngine();
 
-    animation_engine.Animate(Animate);
+    animation_engine.SetAnimateCallback(Animate);
 
     animation_engine.Start();
 }
@@ -103,6 +103,8 @@ function ChangeClampedDistanceState()
 function ChangeTracesState()
 {
     traceIsOn = document.getElementById("object-traces").checked;
+
+    objectTraceStack = [];
 
     if (traceIsOn)
     {
@@ -800,9 +802,7 @@ var elapsedTimeInRealLifePerSec = 86400; //86400 secs = 1 day
 var days = 0;
 var addTracePoint = 0;
 
-
-
-//Recursive funtcion called once per frame
+//callback funtcion given to animation engine called once per frame
 function Animate()
 {
     UpdateFps(animation_engine.fps);
