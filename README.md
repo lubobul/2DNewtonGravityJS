@@ -8,9 +8,9 @@ This tool is written in pure JavaScript and is intended for experimenting with N
 
 ##Goals for later versions
 - Revisit the whole app
--- Naming conventions
--- Variables
--- Code styling
--- Use of classes (ES6)
--- Possible optimizations?
--- Tweak UX?
+- Naming conventions
+- Variables
+- Code styling
+- Use of classes (ES6)
+- Possible optimizations?
+- Tweak UX?
