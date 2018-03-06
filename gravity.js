@@ -22,9 +22,9 @@ function LoadAnimationEngine()
 {
     animation_engine = new AnimationEngine();
 
-    animation_engine.SetAnimateCallback(Animate);
+    animation_engine.setAnimationFrameCallback(Animate);
 
-    animation_engine.Start();
+    animation_engine.start();
 }
 
 //Ui controls
@@ -805,6 +805,7 @@ var addTracePoint = 0;
 //callback funtcion given to animation engine called once per frame
 function Animate()
 {
+
     UpdateFps(animation_engine.fps);
 
     // t - time between calculting new positions
