@@ -232,12 +232,10 @@
 
     <h1 id="header">Welcome to Newton's law of universal gravitation N-body simulation v1.0</h1>
 
-    <!--<h3 class="header4">Have fun!</h3>-->
-
     <div class="menu-canvas-wrapper">
 
         <div id="popup" class="my-popup">
-            <button class="close-poppup" onclick="CloseAbout()">X</button>
+            <button class="close-poppup" onclick="closeAbout()">X</button>
             <h3 class="header4" style="color:white">Author </h3>
             <p style="color:white">Lyubomir Dimitrov Stoychev</p>
             <h3 class="header4" style="color:white">About </h3>
@@ -255,7 +253,7 @@
             <button class="simulation-option menu-options-button" onclick="Particles2()">Particles 2</button>
             <button class="simulation-option menu-options-button" onclick="Particles3()">Negative particles 1</button>
             <button class="simulation-option menu-options-button" onclick="Particles4()">Negative particles 2</button>
-            <button class="simulation-option menu-options-button" onclick="About()">About</button>
+            <button class="simulation-option menu-options-button" onclick="about()">About</button>
 
             <div class="menu-options-button">
                 <h4 style="padding-top:1.3em; padding-left:1em;" class="header4">Tips: for new object - drag & drop; For object stats - right click on object;</h4>
@@ -269,8 +267,8 @@
 
             <div style="width:300px;">
                 <h4 class="header4">Speed controls </h4>
-                <button class="simulation-option" onclick="Slower()">/2</button>
-                <button class="simulation-option" onclick="Faster()">x2</button>
+                <button class="simulation-option" onclick="slower()">/2</button>
+                <button class="simulation-option" onclick="faster()">x2</button>
             </div>
 
             <div style="width:300px;">

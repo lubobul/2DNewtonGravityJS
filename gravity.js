@@ -16,33 +16,33 @@ window.onload = function ()
     LoadAnimationEngine();
 }
 
-var animation_engine;
+var animationEngine;
 
 function LoadAnimationEngine()
 {
-    animation_engine = new AnimationEngine();
+    animationEngine = new AnimationEngine();
 
-    animation_engine.setAnimationFrameCallback(Animate);
+    animationEngine.setAnimationFrameCallback(Animate);
 
-    animation_engine.start();
+    animationEngine.start();
 }
 
 //Ui controls
 
-function About()
+function about()
 {
     var popup = document.getElementById("popup");
     popup.style.display = 'block';
 }
 
-function CloseAbout()
+function closeAbout()
 {
     var popup = document.getElementById("popup");
     popup.style.display = 'none';
 }
 
 //increase speed simulation by a factor of 2
-function Faster()
+function faster()
 {
     elapsedTimeInRealLifePerSec *= 2;
 
@@ -50,7 +50,7 @@ function Faster()
 }
 
 //decrease speed simulation by a factor of 2
-function Slower()
+function slower()
 {
     elapsedTimeInRealLifePerSec /= 2;
 
@@ -269,6 +269,7 @@ function MouseDown(e)
     }
     else
     {
+        shouldDrawDirectionVector = true;
         object_vector_start_x = GetMouseCoordinates(e).x;
         object_vector_start_y = GetMouseCoordinates(e).y;
         object_vector_direction_x = object_vector_start_x;
@@ -284,6 +285,7 @@ function MouseUp(e) {
         //right click
     } else
     {
+        shouldDrawDirectionVector = false;
         canvas.removeEventListener("mousemove", MouseMove, false);
         InsertNewObjectIntoTheSimulation();
     }
@@ -333,21 +335,40 @@ function DrawPixel(x, y)
 }
 
 //Draw a line from posX,posY to posXto, posYto without offset
-function DrawLineNoOffset(posX, posY, posXto, posYto)
+function DrawLineNoOffset(posX, posY, posXto, posYto, lineWidth, lineColor, lineDash)
 {
+    if(lineDash)
+    {
+        ctx.setLineDash(lineDash);
+    }
+
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = lineColor;
+
     ctx.beginPath();
     ctx.moveTo(posX, posY);
     ctx.lineTo(posXto, posYto);
     ctx.closePath();
     ctx.stroke();
+    //restore
+    ctx.setLineDash([0, 0]);
+}
+
+function drawObjectWithOffset(posX, posY, radius, color)
+{
+    drawObject(posX + offsetX, posY + offsetY, radius, color);
+}
+
+function drawObjectNoOffset(posX, posY, radius, color)
+{
+    drawObject(posX, posY, radius, color);
 }
 
 //Draws an oval object
-function DrawObject(posX, posY, radius, color)
+function drawObject(posX, posY, radius, color)
 {
-    ctx.setLineDash([0, 0]);
     ctx.beginPath();
-    ctx.arc(offsetX + posX, offsetY + posY, radius, 0, 2 * Math.PI, false);
+    ctx.arc(posX, posY, radius, 0, 2 * Math.PI, false);
     ctx.closePath();
     ctx.fillStyle = color;
     ctx.fill();
@@ -356,20 +377,31 @@ function DrawObject(posX, posY, radius, color)
 //Draws the X Y dahsed AXIS
 function InitXYAxis()
 {
-    ctx.setLineDash([1, 2]);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "green";
-    DrawLineNoOffset(0, canvas.height / 2, canvas.width, canvas.height / 2);
-    DrawLineNoOffset(canvas.width / 2, 0, canvas.width / 2, canvas.height);
+    DrawLineNoOffset(0, canvas.height / 2, canvas.width, canvas.height / 2,
+        0.5, "green", [0.5, 2.5]);
+    DrawLineNoOffset(canvas.width / 2, 0, canvas.width / 2, canvas.height,
+        0.5, "green", [0.5, 2.5]);
 }
+
+var shouldDrawDirectionVector = false;
 
 //Draws vector of drag-drop adding new object
 function NewObjectDirectionVector()
 {
-    ctx.setLineDash([0, 0]);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "red";
-    DrawLineNoOffset(object_vector_start_x, object_vector_start_y, object_vector_direction_x, object_vector_direction_y);
+    if(shouldDrawDirectionVector)
+    {
+        DrawLineNoOffset(object_vector_start_x, object_vector_start_y, 
+            object_vector_direction_x, object_vector_direction_y,
+            0.2, "red");
+        
+        //draw actual object to be launched
+        drawObjectNoOffset(object_vector_start_x, object_vector_start_y, 
+            (selected_object.diameter / 2) / size_factor, selected_object.color);
+        
+        //draw direction indicator
+        drawObjectNoOffset(object_vector_direction_x, object_vector_direction_y, 
+                (3474000 / 2) / size_factor, "red");
+    }    
 }
 
 //Clears the canvas
@@ -806,15 +838,14 @@ var addTracePoint = 0;
 function Animate()
 {
 
-    UpdateFps(animation_engine.fps);
+    UpdateFps(animationEngine.fps);
 
     // t - time between calculting new positions
-    t = elapsedTimeInRealLifePerSec * animation_engine.delta_time;
+    t = elapsedTimeInRealLifePerSec * animationEngine.delta_time;
 
     ClearCanvas();
+    //TODO move this to new layer with alpha(canvas)
     InitXYAxis();
-
-    NewObjectDirectionVector();
 
     //That's where all dynamic calculations occur, called in a specific order
     if (isSimulationRunning)
@@ -825,7 +856,7 @@ function Animate()
 
         CalculateMultipleObjects();
 
-        days += (animation_engine.delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
+        days += (animationEngine.delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
     }
 
     DrawMultipleObejcts();
@@ -834,6 +865,8 @@ function Animate()
     if(statsAreOn) UpdateObjectStats()
 
     if (traceIsOn) DrawTraces();
+
+    NewObjectDirectionVector();
 }
 
 var alpha = 0.0;
@@ -871,7 +904,7 @@ function DrawMultipleObejcts()
     for (objects_i = 0, len_object = initObjects.length; objects_i < len_object; objects_i++)
     {
         object_to_draw = initObjects[objects_i];
-        DrawObject(object_to_draw.x / distance_factor, object_to_draw.y / distance_factor, (object_to_draw.diameter / 2) / size_factor, object_to_draw.color);
+        drawObjectWithOffset(object_to_draw.x / distance_factor, object_to_draw.y / distance_factor, (object_to_draw.diameter / 2) / size_factor, object_to_draw.color);
     }
 }
 
