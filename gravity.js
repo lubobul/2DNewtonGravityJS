@@ -44,7 +44,7 @@ function closeAbout()
 //increase speed simulation by a factor of 2
 function faster()
 {
-    elapsedTimeInRealLifePerSec *= 2;
+    elapsedSimulatedTimePerSimulationSec *= 2;
 
     updateSpeed();
 }
@@ -52,7 +52,7 @@ function faster()
 //decrease speed simulation by a factor of 2
 function slower()
 {
-    elapsedTimeInRealLifePerSec /= 2;
+    elapsedSimulatedTimePerSimulationSec /= 2;
 
     updateSpeed();
 }
@@ -77,9 +77,9 @@ function resetSimulation()
 
 function changeStaticObjectsState()
 {
-    static_objects_state = document.getElementById("static-objects").checked;
+    areStaticObjectsOn = document.getElementById("static-objects").checked;
 
-    if (static_objects_state)
+    if (areStaticObjectsOn)
     {
         document.getElementById("static-objects-checkbox-label").innerHTML = "Enabled";
     }
@@ -91,9 +91,9 @@ function changeStaticObjectsState()
 
 function changeClampedDistanceState()
 {
-    is_distance_between_objects_clamped = document.getElementById("clamped-distance").checked;
+    isDistanceBetweenObjectsClamped = document.getElementById("clamped-distance").checked;
 
-    if (is_distance_between_objects_clamped) {
+    if (isDistanceBetweenObjectsClamped) {
         document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
     }
     else {
@@ -103,11 +103,11 @@ function changeClampedDistanceState()
 
 function changeTracesState()
 {
-    traceIsOn = document.getElementById("object-traces").checked;
+    areTracesOn = document.getElementById("object-traces").checked;
 
     objectTraceStack = [];
 
-    if (traceIsOn)
+    if (areTracesOn)
     {
         document.getElementById("object-traces-checkbox-label").innerHTML = "Enabled";
     }
@@ -119,9 +119,9 @@ function changeTracesState()
 
 function changeCollisionState()
 {
-    is_colision_mode_on = document.getElementById("collision").checked;
+    isColisionModeOn = document.getElementById("collision").checked;
 
-    if (is_colision_mode_on)
+    if (isColisionModeOn)
     {
         document.getElementById("object-collision-checkbox-label").innerHTML = "Enabled";
     }
@@ -169,7 +169,7 @@ function resetUiControls()
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Disabled";
 
-    is_colision_mode_on, document.getElementById("collision").checked = false;
+    isColisionModeOn, document.getElementById("collision").checked = false;
 
     document.getElementById("object-collision-checkbox-label").innerHTML = "Disabled";
 
@@ -179,13 +179,13 @@ function resetUiControls()
     setTimeout(updateSpeed, 10);
 }
 
-var selected_object = undefined;
+var selectedObject = null;
 
 //Change selected object for adding it into the simulation via drag&drop
 function selectObject(value)
 {
     if (value == 'earth') {
-        selected_object = {
+        selectedObject = {
             color: "blue",
             diameter: 12742000,
             //substracting offset because adding it when rendering
@@ -198,7 +198,7 @@ function selectObject(value)
 
     }
     else if (value == 'jupiter') {
-        selected_object = {
+        selectedObject = {
             color: "orange",
             diameter: 139822000 / 10,
             //substracting offset because adding it when rendering
@@ -210,7 +210,7 @@ function selectObject(value)
         }
     }
     else if (value == 'sun') {
-        selected_object = {
+        selectedObject = {
             color: "yellow",
             diameter: 1391400000 / 30,
             //substracting offset because adding it when rendering
@@ -221,7 +221,7 @@ function selectObject(value)
             mass: 1.989 * Math.pow(10, 30)
         }
     } else if (value == 'moon') {
-        selected_object = {
+        selectedObject = {
             color: "grey",
             diameter: 3474000,
             //substracting offset because adding it when rendering
@@ -288,7 +288,8 @@ function mouseUp(e) {
     if (e.button === 2)
     { 
         //right click
-    } else
+    } 
+    else
     {
         shouldDrawDirectionVector = false;
         canvas.removeEventListener("mousemove", mouseMove, false);
@@ -391,7 +392,7 @@ function initXYAxis()
 }
 
 var shouldDrawDirectionVector = false;
-
+var VECTOR_DIRECTION_BALL_r = 1500000;
 //Draws vector of drag-drop adding new object
 function newObjectDirectionVector()
 {
@@ -403,11 +404,11 @@ function newObjectDirectionVector()
         
         //draw actual object to be launched
         drawObjectNoOffset(object_vector_start_x, object_vector_start_y, 
-            (selected_object.diameter / 2) / size_factor, selected_object.color);
+            (selectedObject.diameter / 2) / size_factor, selectedObject.color);
         
         //draw direction indicator
         drawObjectNoOffset(object_vector_direction_x, object_vector_direction_y, 
-                (3474000 / 2) / size_factor, "red");
+            VECTOR_DIRECTION_BALL_r / size_factor, "red");
     }    
 }
 
@@ -435,7 +436,7 @@ var speed_element = document.getElementById("speed");
 //Update speed element
 function updateSpeed()
 {
-    speed_element.innerHTML = "Speed: " + elapsedTimeInRealLifePerSec + "x";
+    speed_element.innerHTML = "Speed: " + elapsedSimulatedTimePerSimulationSec + "x";
 }
 
 var obj_velocity_x_element = document.getElementById("object-velocity-x");
@@ -445,10 +446,10 @@ var obj_speed_element = document.getElementById("object-speed");
 //Update object stats
 function updateObjectStats()
 {
-    obj_velocity_x_element.innerHTML = "Velocity X: " + Math.round(initObjects[selected_object_for_stats_index].v_x) + "m/s";
-    obj_velocity_y_element.innerHTML = "Velocity Y: " + Math.round(initObjects[selected_object_for_stats_index].v_y) + "m/s";
-    obj_speed_element.innerHTML = "Speed: " + Math.round(Math.sqrt(Math.pow(initObjects[selected_object_for_stats_index].v_x, 2)
-        + Math.pow(initObjects[selected_object_for_stats_index].v_y, 2))) + "m/s";
+    obj_velocity_x_element.innerHTML = "Velocity X: " + Math.round(simulationObjects[selected_object_for_stats_index].v_x) + "m/s";
+    obj_velocity_y_element.innerHTML = "Velocity Y: " + Math.round(simulationObjects[selected_object_for_stats_index].v_y) + "m/s";
+    obj_speed_element.innerHTML = "Speed: " + Math.round(Math.sqrt(Math.pow(simulationObjects[selected_object_for_stats_index].v_x, 2)
+        + Math.pow(simulationObjects[selected_object_for_stats_index].v_y, 2))) + "m/s";
 }
 
 
@@ -481,7 +482,7 @@ function planetaryMode()
     new_object_velocity_factor = 5000;
 
     //Sun
-    var body1 = {
+    let body1 = {
         color: "yellow",
         diameter: 1391400000/30,
         x: 0,
@@ -492,7 +493,7 @@ function planetaryMode()
     }
 
     //Mercury
-    var body2 = {
+    let body2 = {
         color: "grey",
         diameter: 4879000,
         x: 0,
@@ -503,7 +504,7 @@ function planetaryMode()
     }
 
     //Venus
-    var body3 = {
+    let body3 = {
         color: "orange",
         diameter: 12104000,
         x: 0,
@@ -514,7 +515,7 @@ function planetaryMode()
     }
 
     //Earth
-    var body4 = {
+    let body4 = {
         color: "blue",
         diameter: 12742000,
         x: 0,
@@ -525,7 +526,7 @@ function planetaryMode()
     }
 
     //mars
-    var body5 = {
+    let body5 = {
         color: "red",
         diameter: 6779000,
         x: 0,
@@ -536,7 +537,7 @@ function planetaryMode()
     }
 
     //Jupiter
-    var body6 = {
+    let body6 = {
         color: "orange",
         diameter: 139822000,
         x: 0,
@@ -548,11 +549,11 @@ function planetaryMode()
 
 
     //Mercury to Jupiter real simulation
-    initObjects.push(body1);
-    initObjects.push(body2);
-    initObjects.push(body3);
-    initObjects.push(body4);
-    initObjects.push(body5);
+    simulationObjects.push(body1);
+    simulationObjects.push(body2);
+    simulationObjects.push(body3);
+    simulationObjects.push(body4);
+    simulationObjects.push(body5);
     //initObjects.push(body6);
 
 }
@@ -565,7 +566,7 @@ function sandbox()
 
     clearSimulationVariables();
 
-    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 4;
+    elapsedSimulatedTimePerSimulationSec = SECONDS_PER_DAY / 4;
 
     new_object_velocity_factor = 50;
     distance_factor = 1000000;
@@ -578,27 +579,27 @@ function particles()
 
     clearSimulationVariables();
 
-    is_distance_between_objects_clamped = true;
+    isDistanceBetweenObjectsClamped = true;
     document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
     reset_delegate = particles;
 
-    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 20;
+    elapsedSimulatedTimePerSimulationSec = SECONDS_PER_DAY / 20;
 
     new_object_velocity_factor = 50;
     distance_factor = 1000000;
     size_factor = 1000000;
 
-    var obj_per_width = 25;
-    var obj_per_height = 25;
+    let obj_per_width = 25;
+    let obj_per_height = 25;
 
-    var new_particle = {};
+    let new_particle = {};
 
-    for (var i = 1; i <= obj_per_width; i++)
+    for (let i = 1; i <= obj_per_width; i++)
     {
-        for (var j = 1; j <= obj_per_height; j++)
+        for (let j = 1; j <= obj_per_height; j++)
         {
             new_particle = {
                 color: "black",
@@ -610,7 +611,7 @@ function particles()
                 mass: 7.35 * Math.pow(10, 24)
             }
 
-            initObjects.push(new_particle);
+            simulationObjects.push(new_particle);
         }
     }
 
@@ -623,7 +624,7 @@ function particles2()
 
     clearSimulationVariables();
 
-    is_distance_between_objects_clamped = true;
+    isDistanceBetweenObjectsClamped = true;
 
     document.getElementById("clamped-distance").checked = true;
 
@@ -631,20 +632,20 @@ function particles2()
 
     reset_delegate = particles2;
 
-    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 30;
+    elapsedSimulatedTimePerSimulationSec = SECONDS_PER_DAY / 30;
 
     new_object_velocity_factor = 50;
     distance_factor = 1000000;
     size_factor = 1000000;
 
-    var obj_per_width = 25;
-    var obj_per_height = 25;
+    let obj_per_width = 25;
+    let obj_per_height = 25;
 
-    var new_particle = {};
+    let new_particle = {};
 
-    for (var i = 1; i <= obj_per_width; i++)
+    for (let i = 1; i <= obj_per_width; i++)
     {
-        for (var j = 1; j <= obj_per_height; j++)
+        for (let j = 1; j <= obj_per_height; j++)
         {
             new_particle = {
                 color: "black",
@@ -656,11 +657,11 @@ function particles2()
                 mass: 7.35 * Math.pow(10, 22)
             }
 
-            initObjects.push(new_particle);
+            simulationObjects.push(new_particle);
         }
     }
 
-    initObjects.push({
+    simulationObjects.push({
     color : "orange",
     diameter: 13982200,
     mass : 1.898e+27,
@@ -670,7 +671,7 @@ function particles2()
     y: 101000000
     });
 
-    initObjects.push({
+    simulationObjects.push({
         color: "orange",
         diameter: 13982200,
         mass: 1.898e+27,
@@ -689,26 +690,26 @@ function particles3() {
 
     hideTracesOption();
 
-    is_distance_between_objects_clamped = true;
+    isDistanceBetweenObjectsClamped = true;
     document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
     reset_delegate = particles3;
 
-    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 40;
+    elapsedSimulatedTimePerSimulationSec = SECONDS_PER_DAY / 40;
 
     new_object_velocity_factor = 50;
     distance_factor = 1000000;
     size_factor = 1000000;
 
-    var obj_per_width = 25;
-    var obj_per_height = 25;
+    let obj_per_width = 25;
+    let obj_per_height = 25;
 
-    var new_particle = {};
+    let new_particle = {};
 
-    for (var i = 1; i <= obj_per_width; i++) {
-        for (var j = 1; j <= obj_per_height; j++) {
+    for (let i = 1; i <= obj_per_width; i++) {
+        for (let j = 1; j <= obj_per_height; j++) {
             new_particle = {
                 color: "black",
                 diameter: 2474000,
@@ -719,11 +720,11 @@ function particles3() {
                 mass: -7.35 * Math.pow(10, 22)
             }
 
-            initObjects.push(new_particle);
+            simulationObjects.push(new_particle);
         }
     }
 
-    initObjects.push({
+    simulationObjects.push({
         color: "orange",
         diameter: 13982200,
         mass: -1.898e+27,
@@ -733,7 +734,7 @@ function particles3() {
         y: 101000000
     });
 
-    initObjects.push({
+    simulationObjects.push({
         color: "orange",
         diameter: 13982200,
         mass: -1.898e+27,
@@ -752,32 +753,32 @@ function particles4() {
 
     hideTracesOption();
 
-    is_distance_between_objects_clamped = true;
+    isDistanceBetweenObjectsClamped = true;
     document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
     document.getElementById("collision").checked = true;
 
-    is_colision_mode_on = true;
+    isColisionModeOn = true;
 
     document.getElementById("object-collision-checkbox-label").innerHTML = "Enabled"; 
 
     reset_delegate = particles4;
 
-    elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 30;
+    elapsedSimulatedTimePerSimulationSec = SECONDS_PER_DAY / 30;
 
     new_object_velocity_factor = 50;
     distance_factor = 1000000;
     size_factor = 1000000;
 
-    var obj_per_width = 25;
-    var obj_per_height = 25;
+    let obj_per_width = 25;
+    let obj_per_height = 25;
 
-    var new_particle = {};
+    let new_particle = {};
 
-    for (var i = 1; i <= obj_per_width; i++) {
-        for (var j = 1; j <= obj_per_height; j++) {
+    for (let i = 1; i <= obj_per_width; i++) {
+        for (let j = 1; j <= obj_per_height; j++) {
             new_particle = {
                 color: "black",
                 diameter: 2474000,
@@ -788,11 +789,11 @@ function particles4() {
                 mass: -7.35 * Math.pow(10, 22)
             }
 
-            initObjects.push(new_particle);
+            simulationObjects.push(new_particle);
         }
     }
 
-    initObjects.push({
+    simulationObjects.push({
         color: "orange",
         diameter: 13982200,
         mass: -1.898e+27,
@@ -813,31 +814,31 @@ function clearSimulationVariables()
 
     isSimulationRunning = true;
 
-    traceIsOn = false;
+    areTracesOn = false;
 
     TRACE_LENGTH = 180;
 
-    elapsedTimeInRealLifePerSec = 86400; //86400 secs = 1 day
+    elapsedSimulatedTimePerSimulationSec = 86400; //86400 secs = 1 day
 
     days = 0;
     addTracePoint = 0;
-    initObjects = [];
+    simulationObjects = [];
 
-    static_objects_state = false;
-    statsAreOn = false;
-    is_colision_mode_on = false;
-    is_distance_between_objects_clamped = false;
+    areStaticObjectsOn = false;
+    areStatsOn = false;
+    isColisionModeOn = false;
+    isDistanceBetweenObjectsClamped = false;
     
     resetUiControls();
 }
 
 var isSimulationRunning = false;
 
-var traceIsOn = false;
-var statsAreOn = false;
+var areTracesOn = false;
+var areStatsOn = false;
 
 //Change this to run simulation faster / slower
-var elapsedTimeInRealLifePerSec = 86400; //86400 secs = 1 day
+var elapsedSimulatedTimePerSimulationSec = 86400; //86400 secs = 1 day
 var days = 0;
 var addTracePoint = 0;
 
@@ -848,7 +849,7 @@ function animate()
     updateFps(animationEngine.fps);
 
     // t - time between calculting new positions
-    t = elapsedTimeInRealLifePerSec * animationEngine.delta_time;
+    t = elapsedSimulatedTimePerSimulationSec * animationEngine.delta_time;
 
     clearCanvas();
     //TODO move this to new layer with alpha(canvas)
@@ -859,58 +860,63 @@ function animate()
     {
         ////Takes a lot of CPU - enable only for a single object...
         ////attempting to get long traces when slower
-        if (traceIsOn) calculateTraces();
+        if (areTracesOn)
+        { 
+            calculateTraces();
+        }
 
         calculateMultipleObjects();
 
-        days += (animationEngine.delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
+        days += (animationEngine.delta_time * elapsedSimulatedTimePerSimulationSec) / SECONDS_PER_DAY;
     }
 
     drawMultipleObejcts();
     updateDays();
 
-    if(statsAreOn) updateObjectStats()
-
-    if (traceIsOn) drawTraces();
+    if (areStatsOn) 
+    {
+        updateObjectStats();
+    }
+    
+    if (areTracesOn)
+    { 
+        drawTraces();
+    }
 
     newObjectDirectionVector();
 }
 
-var alpha = 0.0;
-var fraction;
-var trace;
+var MAX_ALPHA = 0.3;
 
 //Draw multiple traces, trace = [object][trace]
 function drawTraces()
 {
-    alpha = 0.0;
+    let alpha = 0.0;
 
-    fraction = (0.3 / objectTraceStack.length);
+    let alphaFraction = (MAX_ALPHA / objectTraceStack.length);
 
     //Traces
-    for (var i = 0, len = objectTraceStack.length; i < len; i++)
+    for (let i = 0, len = objectTraceStack.length; i < len; i++)
     {
-        alpha += fraction;
+        alpha += alphaFraction;
         ctx.fillStyle = "rgba(0,0,0," + alpha + ")"; //dim trace at tail
 
         //Trace
-        trace = objectTraceStack[i];
+        let trace = objectTraceStack[i];
         //Objects
-        for (var j = 0, len_j  = trace.length; j < len_j; j++)
+        for (let j = 0, len_j  = trace.length; j < len_j; j++)
         {
             drawPixel(trace[j].x, trace[j].y);
         }
     }
 }
 
-var objects_i, len_object;
-var object_to_draw;
 //draw multiple objects
 function drawMultipleObejcts()
 {
-    for (objects_i = 0, len_object = initObjects.length; objects_i < len_object; objects_i++)
+    for (let objects_i = 0, len_object = simulationObjects.length; objects_i < len_object; objects_i++)
     {
-        object_to_draw = initObjects[objects_i];
+        let object_to_draw = simulationObjects[objects_i];
         drawObjectWithOffset(object_to_draw.x / distance_factor, object_to_draw.y / distance_factor, (object_to_draw.diameter / 2) / size_factor, object_to_draw.color);
     }
 }
@@ -920,25 +926,28 @@ var selected_object_for_stats_index = 0;
 //called once per right click on canvas, if object under mouse, select it to show stats, else hide stats
 function showStatsForObject(e)
 {
-    var coordinates = getMouseCoordinates(e);
+    let coordinates = getMouseCoordinates(e);
 
-    var r = 0;
+    let r = 0;
 
-    for (var i = 0, len = initObjects.length; i < len; i++)
+    for (let i = 0, len = simulationObjects.length; i < len; i++)
     {
-        r = Math.sqrt(Math.pow(((initObjects[i].x / distance_factor) - (coordinates.x - offsetX)), 2) + Math.pow(((initObjects[i].y / distance_factor) - (coordinates.y - offsetY)), 2));
+        r = Math.sqrt(
+                Math.pow(((simulationObjects[i].x / distance_factor) - (coordinates.x - offsetX)), 2) + 
+                Math.pow(((simulationObjects[i].y / distance_factor) - (coordinates.y - offsetY)), 2)
+            );
 
-        if (r <= (initObjects[i].diameter / size_factor) / 2 + 1)
+        if (r <= (simulationObjects[i].diameter / size_factor) / 2 + 1)
         {
             selected_object_for_stats_index = i;
 
             showObjectStats();
-            statsAreOn = true;
+            areStatsOn = true;
             return;
         }
     }
 
-    statsAreOn = false;
+    areStatsOn = false;
     hideObjectStats();
 }
 
@@ -949,20 +958,20 @@ function insertNewObjectIntoTheSimulation()
 {
     //substracting start x and y from direction x and y to get 0.0 to x.y,
     //have in mind that coordinate system starts from X0/Y0 therefore always X >0 & Y >0 and it is OK to substract coordinates like this
-    var polar_coordinates = cartesianToPolar(object_vector_direction_x - object_vector_start_x, object_vector_direction_y - object_vector_start_y);
+    let cartesianCoordinates = cartesianToPolar(object_vector_direction_x - object_vector_start_x, object_vector_direction_y - object_vector_start_y);
 
-    var v = (polar_coordinates.r * new_object_velocity_factor); //linear progression of velocity based on vector length (needs to be figured out properly)
+    let v = (cartesianCoordinates.r * new_object_velocity_factor); //linear progression of velocity based on vector length (needs to be figured out properly)
 
-    var new_obj =
+    let newObj =
     {
-        color: selected_object.color,
-        diameter: selected_object.diameter,
+        color: selectedObject.color,
+        diameter: selectedObject.diameter,
         //substracting offset because adding it when rendering
         x: (object_vector_start_x - offsetX) * distance_factor,
         y: (object_vector_start_y - offsetY) * distance_factor,
-        v_x: v * Math.cos(polar_coordinates.t),
-        v_y: v * Math.sin(polar_coordinates.t),
-        mass: selected_object.mass
+        v_x: v * Math.cos(cartesianCoordinates.t),
+        v_y: v * Math.sin(cartesianCoordinates.t),
+        mass: selectedObject.mass
     }
 
     object_vector_direction_x =
@@ -970,7 +979,7 @@ function insertNewObjectIntoTheSimulation()
         object_vector_direction_y =
         object_vector_start_y = 0;
 
-    initObjects.push(new_obj);
+    simulationObjects.push(newObj);
 }
 
 var objectTraceStack = [];
@@ -983,15 +992,15 @@ function calculateTraces()
     if (objectTraceStack.length > TRACE_LENGTH)
         objectTraceStack.shift(); //rem last
 
-    var traces = [];
+    let traces = [];
 
-    for (var i = 0, len = initObjects.length; i < len; i++)
+    for (let i = 0, len = simulationObjects.length; i < len; i++)
     {
-        if (initObjects[i].v_x != 0 || initObjects[i].v_y != 0)
+        if (simulationObjects[i].v_x != 0 || simulationObjects[i].v_y != 0)
         {
             traces.push({
-                x: initObjects[i].x / distance_factor,
-                y: initObjects[i].y / distance_factor
+                x: simulationObjects[i].x / distance_factor,
+                y: simulationObjects[i].y / distance_factor
             });
         }
     }
@@ -999,77 +1008,72 @@ function calculateTraces()
     objectTraceStack.push(traces);
 }
 
-var initObjects = [];
+var simulationObjects = [];
 
-var tmp_F;
+var tmp_F = null;
 var currentObject;
 
 //Net force mussed be calculated for each object compared to each of the rest of objects (sum of all forces applied to a particular object)
 var net_F_x;
 var net_F_y;
-var new_objects = [];
-
+var newObjects = [];
 var numOfObjects;
-
-var static_objects_state = false;
-var i;
-var new_i;
+var areStaticObjectsOn = false;
 
 //This is the main function for calculating N object interaction, called 1ce per frame
 function calculateMultipleObjects()
 {
-    new_objects = [];
+    newObjects = [];
 
-    numOfObjects = initObjects.length;
+    numOfObjects = simulationObjects.length;
 
-    for (i = 0; i < numOfObjects; i++)
+    for (let i = 0; i < numOfObjects; i++)
     {
-        currentObject = initObjects[i];
+        currentObject = simulationObjects[i];
 
         if (currentObject != null)
         {
             net_F_x = 0;
             net_F_y = 0;
-            tmp_F = undefined;
+            tmp_F = 0;
 
             //check if an object is static, skip calculations if true
-            if (!static_objects_state || (((currentObject.v_x + currentObject.v_y) != 0) && static_objects_state))
+            if (!areStaticObjectsOn || (((currentObject.v_x + currentObject.v_y) != 0) && areStaticObjectsOn))
             {
                 calculateObjectInteraction(i);
             }
 
-            new_objects.push(currentObject);
+            newObjects.push(currentObject);
 
-            initObjects[i] = currentObject;
+            simulationObjects[i] = currentObject;
         }
       
     }
 
-    initObjects = [];
+    simulationObjects = [];
 
-    for (new_i = 0; new_i < new_objects.length; new_i++)
+    for (let new_i = 0; new_i < newObjects.length; new_i++)
     {
-        if (new_objects[new_i] != null)
-            initObjects.push(new_objects[new_i]);
+        if (newObjects[new_i] != null)
+            simulationObjects.push(newObjects[new_i]);
     }
 }
 
-var j;
-var secondObject = undefined;
+var secondObject = null;
 var distance_bodies_0 = 0;
 var distance_bodies_1 = 0;
-var is_colision_mode_on = false;
-var is_distance_between_objects_clamped = false;
+var isColisionModeOn = false;
+var isDistanceBetweenObjectsClamped = false;
 
-var colided_objects = undefined;
+var colidedObjects = null;
 
 //All object iteraction goes here
 function calculateObjectInteraction(i)
 {
 
-    for (j = 0; j < numOfObjects; j++)
+    for (let j = 0; j < numOfObjects; j++)
     {
-        secondObject = initObjects[j];
+        secondObject = simulationObjects[j];
 
         if (secondObject != null)
            {
@@ -1080,7 +1084,7 @@ function calculateObjectInteraction(i)
             if (i != j) {
 
                 //clamp closest distance between 2 objects
-                if ((currentObject.diameter / 2 + secondObject.diameter / 2) > distance_bodies_0 && is_distance_between_objects_clamped)
+                if ((currentObject.diameter / 2 + secondObject.diameter / 2) > distance_bodies_0 && isDistanceBetweenObjectsClamped)
                     distance_bodies_0 = (currentObject.diameter / 2) + (secondObject.diameter / 2);
 
                 tmp_F = calcForce2Bodies(currentObject, secondObject, distance_bodies_0);
@@ -1090,30 +1094,30 @@ function calculateObjectInteraction(i)
                 net_F_y += tmp_F.F_y;
 
                 //Colision
-                if (is_colision_mode_on)
+                if (isColisionModeOn)
                 {
                     if (currentObject.mass < secondObject.mass)
                     {
-                        colided_objects = calculateCollision(secondObject, currentObject, distance_bodies_1);
+                        colidedObjects = calculateCollision(secondObject, currentObject, distance_bodies_1);
 
-                        if (colided_objects != null)
+                        if (colidedObjects != null)
                         {
-                            currentObject = colided_objects.smallBody;
-                            secondObject = colided_objects.bigBody;
+                            currentObject = colidedObjects.smallBody;
+                            secondObject = colidedObjects.bigBody;
                         }
                     }
                     else
                     {
-                        colided_objects = calculateCollision(currentObject, secondObject, distance_bodies_1);
+                        colidedObjects = calculateCollision(currentObject, secondObject, distance_bodies_1);
 
-                        if (colided_objects != null)
+                        if (colidedObjects != null)
                         {
-                            secondObject = colided_objects.smallBody;
-                            currentObject = colided_objects.bigBody;
+                            secondObject = colidedObjects.smallBody;
+                            currentObject = colidedObjects.bigBody;
                         }
                     }
 
-                    initObjects[j] = secondObject;
+                    simulationObjects[j] = secondObject;
 
                     if (currentObject == null)
                     {
@@ -1127,7 +1131,7 @@ function calculateObjectInteraction(i)
     currentObject = calcCoordinates2Bodies(currentObject, net_F_x, net_F_y);
 }
 
-//Calculate if collision occurs, transfer mass and size if so
+//Calculate if collision occurs, transfer mass and size if so. Returns null if no collision occrus.
 function calculateCollision(bigBody, smallBody, distance)
 {
     //checking out if collision occured r0 + r1 < distance
