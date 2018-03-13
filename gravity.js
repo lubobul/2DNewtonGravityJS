@@ -2,27 +2,27 @@
 
 window.onload = function ()
 {
-    InvertCanvasAxis();
+    invertCanvasAxis();
 
     offsetX = canvas.width / 2;
     offsetY = canvas.height / 2;
 
-    InitXYAxis();
+    initXYAxis();
 
-    SelectObject('moon');
+    selectObject('moon');
 
-    PlanetaryMode();
+    planetaryMode();
 
-    LoadAnimationEngine();
+    loadAnimationEngine();
 }
 
 var animationEngine;
 
-function LoadAnimationEngine()
+function loadAnimationEngine()
 {
     animationEngine = new AnimationEngine();
 
-    animationEngine.setAnimationFrameCallback(Animate);
+    animationEngine.setAnimationFrameCallback(animate);
 
     animationEngine.start();
 }
@@ -46,7 +46,7 @@ function faster()
 {
     elapsedTimeInRealLifePerSec *= 2;
 
-    UpdateSpeed();
+    updateSpeed();
 }
 
 //decrease speed simulation by a factor of 2
@@ -54,10 +54,10 @@ function slower()
 {
     elapsedTimeInRealLifePerSec /= 2;
 
-    UpdateSpeed();
+    updateSpeed();
 }
 
-function PauseUnpause()
+function pauseUnpause()
 {
     if (isSimulationRunning)
         document.getElementById("pause-unpause").innerHTML = "Unpause";
@@ -67,14 +67,15 @@ function PauseUnpause()
     isSimulationRunning = !isSimulationRunning;
 }
 
-var reset_delegate = Sandbox;
+var reset_delegate = sandbox;
 
-function ResetSimulation()
+function resetSimulation()
 {
-    reset_delegate();
+    if(reset_delegate)
+        reset_delegate.call();
 }
 
-function ChangeStaticObjectsState()
+function changeStaticObjectsState()
 {
     static_objects_state = document.getElementById("static-objects").checked;
 
@@ -88,7 +89,7 @@ function ChangeStaticObjectsState()
     }
 }
 
-function ChangeClampedDistanceState()
+function changeClampedDistanceState()
 {
     is_distance_between_objects_clamped = document.getElementById("clamped-distance").checked;
 
@@ -100,7 +101,7 @@ function ChangeClampedDistanceState()
     }
 }
 
-function ChangeTracesState()
+function changeTracesState()
 {
     traceIsOn = document.getElementById("object-traces").checked;
 
@@ -116,7 +117,7 @@ function ChangeTracesState()
     }
 }
 
-function ChangeCollisionState()
+function changeCollisionState()
 {
     is_colision_mode_on = document.getElementById("collision").checked;
 
@@ -130,32 +131,32 @@ function ChangeCollisionState()
     }
 }
 
-function HideTracesOption()
+function hideTracesOption()
 {
     var popup = document.getElementById("traces-holder");
     popup.style.display = 'none';
 }
 
-function ShowTracesOption()
+function showTracesOption()
 {
     var popup = document.getElementById("traces-holder");
     popup.style.display = 'block';
 }
 
-function HideObjectStats()
+function hideObjectStats()
 {
     var popup = document.getElementById("object-stats-holder");
     popup.style.display = 'none';
 }
 
-function ShowObjectStats()
+function showObjectStats()
 {
     var popup = document.getElementById("object-stats-holder");
     popup.style.display = 'block';
 }
 
 
-function ResetUiControls()
+function resetUiControls()
 {
     document.getElementById("pause-unpause").innerHTML = "Pause";
 
@@ -172,15 +173,16 @@ function ResetUiControls()
 
     document.getElementById("object-collision-checkbox-label").innerHTML = "Disabled";
 
-    HideObjectStats();
+    hideObjectStats();
 
-    setTimeout(UpdateSpeed, 10);
+    //give time for UI to update
+    setTimeout(updateSpeed, 10);
 }
 
 var selected_object = undefined;
 
 //Change selected object for adding it into the simulation via drag&drop
-function SelectObject(value)
+function selectObject(value)
 {
     if (value == 'earth') {
         selected_object = {
@@ -235,13 +237,13 @@ function SelectObject(value)
 //utill
 
 //Degrees to radians
-function DegToRad(deg)
+function degToRad(deg)
 {
     return (Math.PI / 180) * deg;
 }
 
-//Rectangular to polar coordinates 
-function RectToPolar(x, y)
+//Cartesian to polar coordinates
+function cartesianToPolar(x, y)
 {
     var r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     var t = Math.atan2(y, x);
@@ -257,47 +259,52 @@ var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
 
 //Get Canvas Coordinates on click
-canvas.addEventListener("mousedown", MouseDown, false);
-canvas.addEventListener("mouseup", MouseUp, false);
+canvas.addEventListener("mousedown", mouseDown, false);
+canvas.addEventListener("mouseup", mouseUp, false);
 
 //Gets the coordinates of a click over the canvas ( will be used in future for object creation, drag and drop etc.)
-function MouseDown(e)
+function mouseDown(e)
 {
     if (e.button === 2)
     { //right click 
-        ShowStatsForObject(e);
+        showStatsForObject(e);
     }
     else
     {
         shouldDrawDirectionVector = true;
-        object_vector_start_x = GetMouseCoordinates(e).x;
-        object_vector_start_y = GetMouseCoordinates(e).y;
+
+        let coordinates = getMouseCoordinates(e);
+        object_vector_start_x = coordinates.x;
+        object_vector_start_y = coordinates.y;
+
         object_vector_direction_x = object_vector_start_x;
         object_vector_direction_y = object_vector_start_y;
 
-        canvas.addEventListener("mousemove", MouseMove, false);
+        canvas.addEventListener("mousemove", mouseMove, false);
     }
 }
 
-function MouseUp(e) {
+function mouseUp(e) {
     if (e.button === 2)
     { 
         //right click
     } else
     {
         shouldDrawDirectionVector = false;
-        canvas.removeEventListener("mousemove", MouseMove, false);
-        InsertNewObjectIntoTheSimulation();
+        canvas.removeEventListener("mousemove", mouseMove, false);
+        insertNewObjectIntoTheSimulation();
     }
 }
 
-function MouseMove(e) {
+function mouseMove(e) {
 
-    object_vector_direction_x = GetMouseCoordinates(e).x;
-    object_vector_direction_y = GetMouseCoordinates(e).y;
+    let coordinates = getMouseCoordinates(e);
+
+    object_vector_direction_x = coordinates.x;
+    object_vector_direction_y = coordinates.y;
 }
 
-function GetMouseCoordinates(e)
+function getMouseCoordinates(e)
 {
     var x;
     var y;
@@ -319,23 +326,23 @@ function GetMouseCoordinates(e)
     y = c.height - y; //invert y axis (click coordinates are not affected when inverting canvas axis)
 
 
-    return { x: x, y: y }
+    return {x, y}
 }
 
 //Invert canvas
-function InvertCanvasAxis()
+function invertCanvasAxis()
 {
     ctx.transform(1, 0, 0, -1, 0, canvas.height);
 }
 
 //Draw a line from posX,posY to posXto, posYto with offset
-function DrawPixel(x, y)
+function drawPixel(x, y)
 {
     ctx.fillRect(x + offsetX, y + offsetY, 1, 1);
 }
 
 //Draw a line from posX,posY to posXto, posYto without offset
-function DrawLineNoOffset(posX, posY, posXto, posYto, lineWidth, lineColor, lineDash)
+function drawLineNoOffset(posX, posY, posXto, posYto, lineWidth, lineColor, lineDash)
 {
     if(lineDash)
     {
@@ -375,22 +382,22 @@ function drawObject(posX, posY, radius, color)
 }
 
 //Draws the X Y dahsed AXIS
-function InitXYAxis()
+function initXYAxis()
 {
-    DrawLineNoOffset(0, canvas.height / 2, canvas.width, canvas.height / 2,
+    drawLineNoOffset(0, canvas.height / 2, canvas.width, canvas.height / 2,
         0.5, "green", [0.5, 2.5]);
-    DrawLineNoOffset(canvas.width / 2, 0, canvas.width / 2, canvas.height,
+    drawLineNoOffset(canvas.width / 2, 0, canvas.width / 2, canvas.height,
         0.5, "green", [0.5, 2.5]);
 }
 
 var shouldDrawDirectionVector = false;
 
 //Draws vector of drag-drop adding new object
-function NewObjectDirectionVector()
+function newObjectDirectionVector()
 {
     if(shouldDrawDirectionVector)
     {
-        DrawLineNoOffset(object_vector_start_x, object_vector_start_y, 
+        drawLineNoOffset(object_vector_start_x, object_vector_start_y, 
             object_vector_direction_x, object_vector_direction_y,
             0.2, "red");
         
@@ -405,28 +412,28 @@ function NewObjectDirectionVector()
 }
 
 //Clears the canvas
-function ClearCanvas()
+function clearCanvas()
 {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 var fps_element = document.getElementById("fps");
 //Update fps element
-function UpdateFps(fps)
+function updateFps(fps)
 {
     fps_element.innerHTML = "FPS: " + Math.round(fps);
 }
 
 var days_element = document.getElementById("days");
 //Update days element
-function UpdateDays()
+function updateDays()
 {
     days_element.innerHTML = "Days: " + Math.round(days * 100) / 100;
 }
 
 var speed_element = document.getElementById("speed");
 //Update speed element
-function UpdateSpeed()
+function updateSpeed()
 {
     speed_element.innerHTML = "Speed: " + elapsedTimeInRealLifePerSec + "x";
 }
@@ -436,7 +443,7 @@ var obj_velocity_y_element = document.getElementById("object-velocity-y");
 var obj_speed_element = document.getElementById("object-speed");
 
 //Update object stats
-function UpdateObjectStats()
+function updateObjectStats()
 {
     obj_velocity_x_element.innerHTML = "Velocity X: " + Math.round(initObjects[selected_object_for_stats_index].v_x) + "m/s";
     obj_velocity_y_element.innerHTML = "Velocity Y: " + Math.round(initObjects[selected_object_for_stats_index].v_y) + "m/s";
@@ -458,14 +465,14 @@ var SECONDS_PER_DAY = 86400;
 var distance_factor = 0; //Objects distance factor - 1 pix = 1 meter
 var size_factor = 0; //Objects size factor - 1pix = 1 meter 
 
-function PlanetaryMode()
+function planetaryMode()
 {
   
-    ShowTracesOption();
+    showTracesOption();
 
-    reset_delegate = PlanetaryMode;
+    reset_delegate = planetaryMode;
 
-    ClearSimulationVariables();
+    clearSimulationVariables();
 
     TRACE_LENGTH = 600;
 
@@ -490,8 +497,8 @@ function PlanetaryMode()
         diameter: 4879000,
         x: 0,
         y: 57910000000,
-        v_x: 48000 * Math.cos(DegToRad(0)),
-        v_y: 48000 * Math.sin(DegToRad(0)),
+        v_x: 48000 * Math.cos(degToRad(0)),
+        v_y: 48000 * Math.sin(degToRad(0)),
         mass: 3.285 * Math.pow(10, 23)
     }
 
@@ -501,8 +508,8 @@ function PlanetaryMode()
         diameter: 12104000,
         x: 0,
         y: 108200000000,
-        v_x: 35020 * Math.cos(DegToRad(0)),
-        v_y: 35020 * Math.sin(DegToRad(0)),
+        v_x: 35020 * Math.cos(degToRad(0)),
+        v_y: 35020 * Math.sin(degToRad(0)),
         mass: 4.867 * Math.pow(10, 24)
     }
 
@@ -512,8 +519,8 @@ function PlanetaryMode()
         diameter: 12742000,
         x: 0,
         y: 149600000000,
-        v_x: 29800 * Math.cos(DegToRad(0)),
-        v_y: 29800 * Math.sin(DegToRad(0)),
+        v_x: 29800 * Math.cos(degToRad(0)),
+        v_y: 29800 * Math.sin(degToRad(0)),
         mass: 5.972 * Math.pow(10, 24)
     }
 
@@ -523,8 +530,8 @@ function PlanetaryMode()
         diameter: 6779000,
         x: 0,
         y: 227900000000,
-        v_x: 24077 * Math.cos(DegToRad(0)),
-        v_y: 24077 * Math.sin(DegToRad(0)),
+        v_x: 24077 * Math.cos(degToRad(0)),
+        v_y: 24077 * Math.sin(degToRad(0)),
         mass: 6.39 * Math.pow(10, 23)
     }
 
@@ -534,8 +541,8 @@ function PlanetaryMode()
         diameter: 139822000,
         x: 0,
         y: 778500000000,
-        v_x: 13070 * Math.cos(DegToRad(0)),
-        v_y: 13070 * Math.sin(DegToRad(0)),
+        v_x: 13070 * Math.cos(degToRad(0)),
+        v_y: 13070 * Math.sin(degToRad(0)),
         mass: 1.898 * Math.pow(10, 27)
     }
 
@@ -550,13 +557,13 @@ function PlanetaryMode()
 
 }
 
-function Sandbox()
+function sandbox()
 {
-    ShowTracesOption();
+    showTracesOption();
 
-    reset_delegate = Sandbox;
+    reset_delegate = sandbox;
 
-    ClearSimulationVariables();
+    clearSimulationVariables();
 
     elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 4;
 
@@ -565,18 +572,18 @@ function Sandbox()
     size_factor = 1000000;
 }
 
-function Particles()
+function particles()
 {
-    HideTracesOption();
+    hideTracesOption();
 
-    ClearSimulationVariables();
+    clearSimulationVariables();
 
     is_distance_between_objects_clamped = true;
     document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
-    reset_delegate = Particles;
+    reset_delegate = particles;
 
     elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 20;
 
@@ -607,14 +614,14 @@ function Particles()
         }
     }
 
-    PauseUnpause();
+    pauseUnpause();
 }
 
-function Particles2()
+function particles2()
 {
-    HideTracesOption();
+    hideTracesOption();
 
-    ClearSimulationVariables();
+    clearSimulationVariables();
 
     is_distance_between_objects_clamped = true;
 
@@ -622,7 +629,7 @@ function Particles2()
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
-    reset_delegate = Particles2;
+    reset_delegate = particles2;
 
     elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 30;
 
@@ -673,21 +680,21 @@ function Particles2()
         y: -102000000
     });
 
-    PauseUnpause();
+    pauseUnpause();
 }
 
-function Particles3() {
+function particles3() {
 
-    ClearSimulationVariables();
+    clearSimulationVariables();
 
-    HideTracesOption();
+    hideTracesOption();
 
     is_distance_between_objects_clamped = true;
     document.getElementById("clamped-distance").checked = true;
 
     document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
-    reset_delegate = Particles3;
+    reset_delegate = particles3;
 
     elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 40;
 
@@ -736,14 +743,14 @@ function Particles3() {
         y: -102000000
     });
 
-    PauseUnpause();
+    pauseUnpause();
 }
 
-function Particles4() {
+function particles4() {
 
-    ClearSimulationVariables();
+    clearSimulationVariables();
 
-    HideTracesOption();
+    hideTracesOption();
 
     is_distance_between_objects_clamped = true;
     document.getElementById("clamped-distance").checked = true;
@@ -756,7 +763,7 @@ function Particles4() {
 
     document.getElementById("object-collision-checkbox-label").innerHTML = "Enabled"; 
 
-    reset_delegate = Particles4;
+    reset_delegate = particles4;
 
     elapsedTimeInRealLifePerSec = SECONDS_PER_DAY / 30;
 
@@ -795,14 +802,14 @@ function Particles4() {
         y: 0
     });
 
-    PauseUnpause();
+    pauseUnpause();
 }
 
 //Reset simulation variables, including UI linked settings
-function ClearSimulationVariables()
+function clearSimulationVariables()
 {
-    ClearCanvas();
-    InitXYAxis();
+    clearCanvas();
+    initXYAxis();
 
     isSimulationRunning = true;
 
@@ -821,7 +828,7 @@ function ClearSimulationVariables()
     is_colision_mode_on = false;
     is_distance_between_objects_clamped = false;
     
-    ResetUiControls();
+    resetUiControls();
 }
 
 var isSimulationRunning = false;
@@ -835,38 +842,38 @@ var days = 0;
 var addTracePoint = 0;
 
 //callback funtcion given to animation engine called once per frame
-function Animate()
+function animate()
 {
 
-    UpdateFps(animationEngine.fps);
+    updateFps(animationEngine.fps);
 
     // t - time between calculting new positions
     t = elapsedTimeInRealLifePerSec * animationEngine.delta_time;
 
-    ClearCanvas();
+    clearCanvas();
     //TODO move this to new layer with alpha(canvas)
-    InitXYAxis();
+    initXYAxis();
 
     //That's where all dynamic calculations occur, called in a specific order
     if (isSimulationRunning)
     {
         ////Takes a lot of CPU - enable only for a single object...
         ////attempting to get long traces when slower
-        if (traceIsOn) CalculateTraces();
+        if (traceIsOn) calculateTraces();
 
-        CalculateMultipleObjects();
+        calculateMultipleObjects();
 
         days += (animationEngine.delta_time * elapsedTimeInRealLifePerSec) / SECONDS_PER_DAY;
     }
 
-    DrawMultipleObejcts();
-    UpdateDays();
+    drawMultipleObejcts();
+    updateDays();
 
-    if(statsAreOn) UpdateObjectStats()
+    if(statsAreOn) updateObjectStats()
 
-    if (traceIsOn) DrawTraces();
+    if (traceIsOn) drawTraces();
 
-    NewObjectDirectionVector();
+    newObjectDirectionVector();
 }
 
 var alpha = 0.0;
@@ -874,7 +881,7 @@ var fraction;
 var trace;
 
 //Draw multiple traces, trace = [object][trace]
-function DrawTraces()
+function drawTraces()
 {
     alpha = 0.0;
 
@@ -891,7 +898,7 @@ function DrawTraces()
         //Objects
         for (var j = 0, len_j  = trace.length; j < len_j; j++)
         {
-            DrawPixel(trace[j].x, trace[j].y);
+            drawPixel(trace[j].x, trace[j].y);
         }
     }
 }
@@ -899,7 +906,7 @@ function DrawTraces()
 var objects_i, len_object;
 var object_to_draw;
 //draw multiple objects
-function DrawMultipleObejcts()
+function drawMultipleObejcts()
 {
     for (objects_i = 0, len_object = initObjects.length; objects_i < len_object; objects_i++)
     {
@@ -911,9 +918,9 @@ function DrawMultipleObejcts()
 var selected_object_for_stats_index = 0;
 
 //called once per right click on canvas, if object under mouse, select it to show stats, else hide stats
-function ShowStatsForObject(e)
+function showStatsForObject(e)
 {
-    var coordinates = GetMouseCoordinates(e);
+    var coordinates = getMouseCoordinates(e);
 
     var r = 0;
 
@@ -925,24 +932,24 @@ function ShowStatsForObject(e)
         {
             selected_object_for_stats_index = i;
 
-            ShowObjectStats();
+            showObjectStats();
             statsAreOn = true;
             return;
         }
     }
 
     statsAreOn = false;
-    HideObjectStats();
+    hideObjectStats();
 }
 
 var new_object_velocity_factor = 1;
 
 //Inserts a UI selected object into the simulation, calculating direction ad speed proportional to the created drag & drop vector
-function InsertNewObjectIntoTheSimulation()
+function insertNewObjectIntoTheSimulation()
 {
     //substracting start x and y from direction x and y to get 0.0 to x.y,
     //have in mind that coordinate system starts from X0/Y0 therefore always X >0 & Y >0 and it is OK to substract coordinates like this
-    var polar_coordinates = RectToPolar(object_vector_direction_x - object_vector_start_x, object_vector_direction_y - object_vector_start_y);
+    var polar_coordinates = cartesianToPolar(object_vector_direction_x - object_vector_start_x, object_vector_direction_y - object_vector_start_y);
 
     var v = (polar_coordinates.r * new_object_velocity_factor); //linear progression of velocity based on vector length (needs to be figured out properly)
 
@@ -971,7 +978,7 @@ var objectTraceStack = [];
 var TRACE_LENGTH = 180;
 
 //calculate multiple traces
-function CalculateTraces()
+function calculateTraces()
 {
     if (objectTraceStack.length > TRACE_LENGTH)
         objectTraceStack.shift(); //rem last
@@ -1009,7 +1016,7 @@ var i;
 var new_i;
 
 //This is the main function for calculating N object interaction, called 1ce per frame
-function CalculateMultipleObjects()
+function calculateMultipleObjects()
 {
     new_objects = [];
 
@@ -1028,7 +1035,7 @@ function CalculateMultipleObjects()
             //check if an object is static, skip calculations if true
             if (!static_objects_state || (((currentObject.v_x + currentObject.v_y) != 0) && static_objects_state))
             {
-                CalculateObjectInteraction(i);
+                calculateObjectInteraction(i);
             }
 
             new_objects.push(currentObject);
@@ -1057,7 +1064,7 @@ var is_distance_between_objects_clamped = false;
 var colided_objects = undefined;
 
 //All object iteraction goes here
-function CalculateObjectInteraction(i)
+function calculateObjectInteraction(i)
 {
 
     for (j = 0; j < numOfObjects; j++)
@@ -1076,7 +1083,7 @@ function CalculateObjectInteraction(i)
                 if ((currentObject.diameter / 2 + secondObject.diameter / 2) > distance_bodies_0 && is_distance_between_objects_clamped)
                     distance_bodies_0 = (currentObject.diameter / 2) + (secondObject.diameter / 2);
 
-                tmp_F = CalcForce2Bodies(currentObject, secondObject, distance_bodies_0);
+                tmp_F = calcForce2Bodies(currentObject, secondObject, distance_bodies_0);
 
                 //calculate netforce for object i
                 net_F_x += tmp_F.F_x;
@@ -1087,7 +1094,7 @@ function CalculateObjectInteraction(i)
                 {
                     if (currentObject.mass < secondObject.mass)
                     {
-                        colided_objects = CalculateCollision(secondObject, currentObject, distance_bodies_1);
+                        colided_objects = calculateCollision(secondObject, currentObject, distance_bodies_1);
 
                         if (colided_objects != null)
                         {
@@ -1097,7 +1104,7 @@ function CalculateObjectInteraction(i)
                     }
                     else
                     {
-                        colided_objects = CalculateCollision(currentObject, secondObject, distance_bodies_1);
+                        colided_objects = calculateCollision(currentObject, secondObject, distance_bodies_1);
 
                         if (colided_objects != null)
                         {
@@ -1117,16 +1124,16 @@ function CalculateObjectInteraction(i)
         }
     }
 
-    currentObject = CalcCoordinates2Bodies(currentObject, net_F_x, net_F_y);
+    currentObject = calcCoordinates2Bodies(currentObject, net_F_x, net_F_y);
 }
 
 //Calculate if collision occurs, transfer mass and size if so
-function CalculateCollision(bigBody, smallBody, distance)
+function calculateCollision(bigBody, smallBody, distance)
 {
     //checking out if collision occured r0 + r1 < distance
     if ((bigBody.diameter / 2 + smallBody.diameter / 2) < distance) return null;
 
-    var affected_radius = 0;
+    let affected_radius = 0;
 
     if (bigBody.diameter < distance) //center of small circle is outside the big circle
     {
@@ -1141,9 +1148,9 @@ function CalculateCollision(bigBody, smallBody, distance)
         affected_radius = Math.abs(((bigBody.diameter / 2) - distance) + (smallBody.diameter / 2));
     }
 
-    var affected_body_factor = affected_radius / smallBody.diameter;
+    let affected_body_factor = affected_radius / smallBody.diameter;
 
-    var mass_to_transfer = smallBody.mass * affected_body_factor;
+    let mass_to_transfer = smallBody.mass * affected_body_factor;
 
     if (affected_body_factor >= 1.0) //if smallBody has been eaten, set it to null so we avoid negative radiuses, it is later removed from the simulation
     {
@@ -1167,30 +1174,30 @@ function CalculateCollision(bigBody, smallBody, distance)
 //Newton's gravitational constant
 var G = 6.674 * Math.pow(10, -11);
 
-//Elapsed time between 2 points in 2D space betweem the "static" and the moving object
+//Elapsed time between 2 points in 2D space between the "static" and the moving object
 var t = 1; //seconds
 
-function CalcForce2Bodies(movingBody, staticBody, r)
+function calcForce2Bodies(movingBody, staticBody, r)
 {
     // Fgrav = G*M*m/r^2
-    var F = (G * staticBody.mass * movingBody.mass) / (Math.pow(r, 2));
+    let F = (G * staticBody.mass * movingBody.mass) / (Math.pow(r, 2));
 
     //Calculating Force for x and y
 
-    var delta_x = staticBody.x - movingBody.x;
-    var detla_y = staticBody.y - movingBody.y;
+    let delta_x = staticBody.x - movingBody.x;
+    let detla_y = staticBody.y - movingBody.y;
 
-    var F_x = F * (delta_x / r);
-    var F_y = F * (detla_y / r);
+    let F_x = F * (delta_x / r);
+    let F_y = F * (detla_y / r);
 
     return { F_x, F_y };
 }
 
 //Calculates new coordinates and velocities of a moving body based on net force and elapsed time
-function CalcCoordinates2Bodies(movingBody, net_F_x, net_F_y)
+function calcCoordinates2Bodies(movingBody, net_F_x, net_F_y)
 {
-    var a_x = net_F_x / movingBody.mass;
-    var a_y = net_F_y / movingBody.mass;
+    let a_x = net_F_x / movingBody.mass;
+    let a_y = net_F_y / movingBody.mass;
 
     //Calculating new velocities
     movingBody.v_x = movingBody.v_x + (a_x * t);
