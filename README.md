@@ -7,7 +7,7 @@ The big O per frame varies depending on the selected options in the menu. The de
 P.S. Adding too many objects to the simulation may exeed the capabilities of your browser or PC, thus resulting in lower FPS.
 
 ## A bit of history
-This project was started purely as an intent to learn using the HTML5 canvas and applying some calculus in order to draw something interesting. Later on, after achieveing object attraction and repulsion static graphs on a canvas, I decided to animate some movement. First the the implementation was for 1 static and 1 dynamic object. Next step was using 2 dynamic objects. A bigger step was introducing interraction between multiple objects. Later I advanced with adding proper **time** control, which in means brings the tool 1 step closer to simulation. Since it is not a descrete event simulation it seemed necessary to introduce time tracking. Tracing of ojects and collision was later introduced as extras.
+This project was started purely as an intent to learn using the HTML5 canvas and applying some calculus in order to draw something interesting. Later on, after achieveing object attraction and repulsion static graphs on a canvas, I decided to animate some movement. First the the implementation was for 1 static and 1 dynamic object. Next step was using 2 dynamic objects. A bigger step was introducing interraction between multiple objects. Later I advanced with adding proper **time** control, which in means brings the tool 1 step closer to simulation. Since it is not a descrete event simulation it seemed necessary to introduce time tracking. Tracing of objects and collision was later introduced as extras.
 
 ## Examples
 ### Solar system
@@ -17,5 +17,7 @@ This project was started purely as an intent to learn using the HTML5 canvas and
 ### Attraction
 ![graviti3](https://user-images.githubusercontent.com/1053670/37460081-cc2f8a9c-2852-11e8-8ecc-025cc18edc8f.gif)
 ### Repulsion
+![graviti4](https://user-images.githubusercontent.com/1053670/37460477-ffe26ade-2853-11e8-9e96-2224761d3df9.gif)
+### Explosion (Combining repulsion and collision)
+![graviti5](https://user-images.githubusercontent.com/1053670/37460609-669ea634-2854-11e8-9291-1f2af0e445cc.gif)
 
-### Explosion
