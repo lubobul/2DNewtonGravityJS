@@ -9,6 +9,9 @@ P.S. Adding too many objects to the simulation may exeed the capabilities of you
 ## A bit of history
 This project was started purely as an intent to learn using the HTML5 canvas and applying some calculus in order to draw something interesting. Later on, after achieveing object attraction and repulsion static graphs on a canvas, I decided to animate some movement. First the the implementation was for 1 static and 1 dynamic object. Next step was using 2 dynamic objects. A bigger step was introducing interraction between multiple objects. Later I advanced with adding proper **time** control, which in means brings the tool 1 step closer to simulation. Since it is not a descrete event simulation it seemed necessary to introduce time tracking. Tracing of objects and collision was later introduced as extras.
 
+## How to run
+Runnin this is a piece of cake - simply download all files in a root folder, then drag and drop the **gravity.htm** into your favorite browser. No building, bundling, compling whatsoever is required. 
+
 ## Examples
 ### Solar system
 ![graviti1](https://user-images.githubusercontent.com/1053670/37459425-aa436bf8-2850-11e8-9fee-f41302639620.gif)
