@@ -1,0 +1,230 @@
+body {
+    font-size: .85em;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    color: #232323;
+    background-color: #fff;
+}
+
+header, footer, nav, section {
+    display: block;
+}
+
+/* Styles for basic forms
+-----------------------------------------------------------*/
+h1 {
+    display: block;
+    font-size: 2em;
+    -webkit-margin-before: 0.67em;
+    -webkit-margin-after: 0.67em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+}
+
+h3 {
+    display: block;
+    font-size: 1.17em;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+}
+
+h4 {
+    display: block;
+    -webkit-margin-before: 1.33em;
+    -webkit-margin-after: 1.33em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+}
+
+p {
+    display: block;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+}
+
+.header4 {
+    padding: 2px 0px 2px 0px;
+    margin: 2px 0px 2px 0px;
+    color: gray;
+}
+
+input.my-inputs {
+    padding: 5px 15px;
+    background: #f3f3f3;
+    border: 1px solid #585858;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 3px;
+    width: 5.5em;
+    -webkit-box-shadow: 0 0 2px rgba(0,0,0, .75);
+    -moz-box-shadow: 0 0 2px rgba(0,0,0, .75);
+    box-shadow: 0 0 2px rgba(0,0,0, .75);
+    color: #000000;
+    font-size: 1.1em;
+}
+
+input.extra-width {
+    width: 14.6em;
+}
+
+.simulation-option {
+    cursor: pointer;
+    padding: 5px 15px;
+    margin-top: 10px;
+    background: gray;
+    border: 1px solid #7e7e7e;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 2px rgba(0,0,0, .75);
+    -moz-box-shadow: 0 0 2px rgba(0,0,0, .75);
+    box-shadow: 0 0 2px rgba(0,0,0, .75);
+    color: #f3f3f3;
+    font-size: 1.1em;
+}
+
+.simulation-option:hover {
+    background-color: #898989;
+    -webkit-box-shadow: 0 0 1px rgba(0,0,0, .75);
+    -moz-box-shadow: 0 0 1px rgba(0,0,0, .75);
+    box-shadow: 0 0 1px rgba(0,0,0, .75);
+}
+
+#header {
+    color: gray;
+    margin: 0 auto 0 auto;
+    text-align: center;
+}
+
+#footer {
+    color: gray;
+    margin: 0 auto 0 auto;
+    text-align: center;
+}
+
+.main-wrapper {
+    display: flex;
+    flex-flow: column;
+    margin-bottom: 2em;
+}
+
+.menu-canvas-wrapper{
+    display: flex;
+    margin-top: 0.6rem;
+}
+
+.menu {
+    float: left;
+    width: 12rem;
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0, .75);
+    -moz-box-shadow: 0 0 3px rgba(0,0,0, .75);
+    box-shadow: 0 0 3px rgba(0,0,0, .75);
+    padding: 5px;
+    background-color: white;
+}
+
+.canvas-holder {
+    float: left;
+    width: auto;
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0, .75);
+    -moz-box-shadow: 0 0 3px rgba(0,0,0, .75);
+    box-shadow: 0 0 3px rgba(0,0,0, .75);
+    background-color: white;
+}
+
+
+
+.info {
+    margin: 0px 2px 0px 2px;
+    padding: 0px 2px 0px 2px;
+    color: gray;
+}
+
+body {
+    background-color: #fafafa;
+}
+
+.rule2-holder {
+    width: 200px;
+}
+
+.rule2-checkbox-label {
+    margin: 0px 2px 0px 2px;
+    padding: 0px 2px 0px 2px;
+    color: gray;
+}
+
+.menu-options {
+    display: flex;
+}
+
+.menu-options-button {
+    margin-right: 0.2em;
+    float: left;
+}
+
+.my-popup {
+    width: 500px;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -300px 0 0 -250px; /* [-(height/2)px 0 0 -(width/2)px] */
+    padding: 1em;
+    display: none;
+    background: rgba(0,0,0, .8);
+}
+
+.my-popup p{
+    color: white;
+}
+
+.my-popup h3{
+    color: white;
+}
+
+.close-poppup {
+    float: right;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.close-poppup:hover {
+    float: right;
+    border: none;
+    background-color: #f3f3f3;
+    cursor: pointer;
+}
+
+p.text-rendering {
+    color: white;
+    padding: 2px 5px 0px 5px;
+    margin: 0;
+    font-size: 1.3em;
+}
+
+h4.stats {
+    padding: 0px 0px 2px 2px;
+    margin: 0px 0px 2px 2px;
+    color: #83d53b;
+    position: absolute;
+    display: block;
+    font-weight: normal !important;
+    pointer-events: none !important;
+}
+
+.second-stat {
+    margin-top: 1.2em !important;
+}
+
+.third-stat {
+    margin-top: 2.4em !important;
+}

@@ -1,238 +1,18 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="gravity.css">
 
     <title>Gravity v1.0</title>
 </head>
 
 <body>
 
-    <style>
-        body {
-            font-size: .85em;
-            font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
-            color: #232323;
-            background-color: #fff;
-        }
-
-        header, footer, nav, section {
-            display: block;
-        }
-
-        /* Styles for basic forms
-        -----------------------------------------------------------*/
-        h1 {
-            display: block;
-            font-size: 2em;
-            -webkit-margin-before: 0.67em;
-            -webkit-margin-after: 0.67em;
-            -webkit-margin-start: 0px;
-            -webkit-margin-end: 0px;
-            font-weight: bold;
-        }
-
-        h3 {
-            display: block;
-            font-size: 1.17em;
-            -webkit-margin-before: 1em;
-            -webkit-margin-after: 1em;
-            -webkit-margin-start: 0px;
-            -webkit-margin-end: 0px;
-            font-weight: bold;
-        }
-
-        h4 {
-            display: block;
-            -webkit-margin-before: 1.33em;
-            -webkit-margin-after: 1.33em;
-            -webkit-margin-start: 0px;
-            -webkit-margin-end: 0px;
-            font-weight: bold;
-        }
-
-        p {
-            display: block;
-            -webkit-margin-before: 1em;
-            -webkit-margin-after: 1em;
-            -webkit-margin-start: 0px;
-            -webkit-margin-end: 0px;
-        }
-
-        .header4 {
-            padding: 2px 0px 2px 0px;
-            margin: 2px 0px 2px 0px;
-            color: gray;
-        }
-
-        input.my-inputs {
-            padding: 5px 15px;
-            background: #f3f3f3;
-            border: 1px solid #585858;
-            -moz-border-radius: 10px;
-            -webkit-border-radius: 10px;
-            border-radius: 3px;
-            width: 5.5em;
-            -webkit-box-shadow: 0 0 2px rgba(0,0,0, .75);
-            -moz-box-shadow: 0 0 2px rgba(0,0,0, .75);
-            box-shadow: 0 0 2px rgba(0,0,0, .75);
-            color: #000000;
-            font-size: 1.1em;
-        }
-
-        input.extra-width {
-            width: 14.6em;
-        }
-
-        .simulation-option {
-            cursor: pointer;
-            padding: 5px 15px;
-            margin-top: 10px;
-            background: gray;
-            border: 1px solid #7e7e7e;
-            -moz-border-radius: 10px;
-            -webkit-border-radius: 10px;
-            border-radius: 3px;
-            -webkit-box-shadow: 0 0 2px rgba(0,0,0, .75);
-            -moz-box-shadow: 0 0 2px rgba(0,0,0, .75);
-            box-shadow: 0 0 2px rgba(0,0,0, .75);
-            color: #f3f3f3;
-            font-size: 1.1em;
-        }
-
-        .simulation-option:hover {
-            background-color: #898989;
-            -webkit-box-shadow: 0 0 1px rgba(0,0,0, .75);
-            -moz-box-shadow: 0 0 1px rgba(0,0,0, .75);
-            box-shadow: 0 0 1px rgba(0,0,0, .75);
-        }
-
-        #header {
-            color: gray;
-            margin: 0 auto 0 auto;
-            text-align: center;
-        }
-
-        #footer {
-            color: gray;
-            margin: 0 auto 0 auto;
-            text-align: center;
-        }
-
-        .menu {
-            float: left;
-            width: 165px;
-            -webkit-box-shadow: 0 0 3px rgba(0,0,0, .75);
-            -moz-box-shadow: 0 0 3px rgba(0,0,0, .75);
-            box-shadow: 0 0 3px rgba(0,0,0, .75);
-            padding: 5px;
-            background-color: white;
-        }
-
-        .canvas-holder {
-            float: left;
-            width: auto;
-            -webkit-box-shadow: 0 0 3px rgba(0,0,0, .75);
-            -moz-box-shadow: 0 0 3px rgba(0,0,0, .75);
-            box-shadow: 0 0 3px rgba(0,0,0, .75);
-            background-color: white;
-        }
-
-        .menu-canvas-wrapper {
-            width: 1800px;
-            height: auto;
-            margin-bottom: 2em;
-        }
-
-        .info {
-            margin: 0px 2px 0px 2px;
-            padding: 0px 2px 0px 2px;
-            color: gray;
-        }
-
-        body {
-            background-color: #fafafa;
-        }
-
-        .rule2-holder {
-            width: 200px;
-        }
-
-        .rule2-checkbox-label {
-            margin: 0px 2px 0px 2px;
-            padding: 0px 2px 0px 2px;
-            color: gray;
-        }
-
-        .menu-options {
-            width: 1795px;
-            height: 45px;
-            background-color: transparent;
-        }
-
-        .menu-options-button {
-            margin-right: 0.2em;
-            float: left;
-        }
-
-        .my-popup {
-            width: 500px;
-            height: auto;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin: -300px 0 0 -250px; /* [-(height/2)px 0 0 -(width/2)px] */
-            padding: 1em;
-            display: none;
-            background: rgba(0,0,0, .8);
-        }
-
-        .close-poppup {
-            float: right;
-            border: none;
-            background-color: white;
-            cursor: pointer;
-        }
-
-        .close-poppup:hover {
-            float: right;
-            border: none;
-            background-color: #f3f3f3;
-            cursor: pointer;
-        }
-
-        p.text-rendering {
-            color: white;
-            padding: 2px 5px 0px 5px;
-            margin: 0;
-            font-size: 1.3em;
-        }
-
-        h4.stats {
-            padding: 0px 0px 2px 2px;
-            margin: 0px 0px 2px 2px;
-            color: #83d53b;
-            position: absolute;
-            display: block;
-            font-weight: normal !important;
-            pointer-events: none !important;
-        }
-
-        .second-stat {
-            margin-top: 1.2em !important;
-        }
-
-        .third-stat {
-            margin-top: 2.4em !important;
-        }
-    </style>
-
     <h1 id="header">Welcome to Newton's law of universal gravitation N-body simulation v1.0</h1>
 
-    <div class="menu-canvas-wrapper">
+    <div class="main-wrapper">
 
         <div class="menu-options">
 
@@ -243,91 +23,93 @@
             <button class="simulation-option menu-options-button" onclick="particles3()">Repulsion</button>
             <button class="simulation-option menu-options-button" onclick="particles4()">Explosion</button>
             <button class="simulation-option menu-options-button" onclick="about()">About</button>
+        </div>
 
-            <div class="menu-options-button">
-                <h4 style="padding-top:1.3em; padding-left:1em;" class="header4">Tips: for new object - drag across the canvas; For object stats - right click on object;</h4>
+        <div class="menu-canvas-wrapper">
+            <div class="menu">
+
+                <h3 class="header4">Controls</h3>
+
+
+                <div style="width:300px;">
+                    <h4 class="header4">Speed controls </h4>
+                    <button class="simulation-option" onclick="slower()">/2</button>
+                    <button class="simulation-option" onclick="faster()">x2</button>
+                </div>
+
+                <div style="width:300px;">
+                    <h4 class="header4">Play controls</h4>
+                    <button class="simulation-option" id="pause-unpause" onclick="pauseUnpause()">Pause</button>
+                    <button class="simulation-option" id="pause-unpause" onclick="resetSimulation()">Reset</button>
+                </div>
+                <div style="width:300px;">
+                    <h4 class="header4">Static objects</h4>
+                    <input id="static-objects" onclick="changeStaticObjectsState()" type="checkbox" />
+                    <label class="rule2-checkbox-label" id="static-objects-checkbox-label">Disabled</label>
+                </div>
+
+                <div style="width:300px;">
+                    <h4 class="header4">Clamped object distance</h4>
+                    <input id="clamped-distance" onclick="changeClampedDistanceState()" type="checkbox" />
+                    <label class="rule2-checkbox-label" id="clamped-distance-checkbox-label">Disabled</label>
+                </div>
+
+                <div style="width:300px;" id="traces-holder">
+                    <h4 class="header4">Traces (experimental)</h4>
+                    <input id="object-traces" onclick="changeTracesState()" type="checkbox" />
+                    <label class="rule2-checkbox-label" id="object-traces-checkbox-label">Disabled</label>
+                </div>
+
+                <div style="width:300px;">
+                    <h4 class="header4">Collision (experimental)</h4>
+                    <input id="collision" onclick="changeCollisionState()" type="checkbox" />
+                    <label class="rule2-checkbox-label" id="object-collision-checkbox-label">Disabled</label>
+                </div>
+
+                <div style="width:300px;">
+                    <h4 class="header4">Object option</h4>
+                    <select style="width:150px" name="objects" id="selected-object" onChange="selectObject(this.value)">
+                        <option value="moon">Moon</option>
+                        <option value="earth">Earth</option>
+                        <option value="jupiter">Jupiter</option>
+                        <option value="sun">Sun</option>
+                    </select>
+                </div>
+
+                <div style="width:300px; display:none;" id="object-stats-holder">
+                    <h4 style="position:relative;" class="stats" id="object-velocity-x">Velocity X: m/s</h4>
+                    <h4 style="position:relative;" class="stats" id="object-velocity-y">Velocity Y: m/s</h4>
+                    <h4 style="position:relative;" class="stats" id="object-speed">Speed: m/s</h4>
+                </div>
+
+            </div>
+            <div class="canvas-holder" oncontextmenu="return false;">
+
+                <h4 class="stats" id="speed">Speed: </h4>
+                <h4 class="stats second-stat" id="days">Days: </h4>
+                <h4 class="stats third-stat" id="fps">FPS: </h4>
+
+                <canvas id="canvas" width="1620" height="800" tabindex="0"></canvas>
             </div>
         </div>
 
-        <div class="menu">
-
-            <h3 class="header4">Controls</h3>
-
-
-            <div style="width:300px;">
-                <h4 class="header4">Speed controls </h4>
-                <button class="simulation-option" onclick="slower()">/2</button>
-                <button class="simulation-option" onclick="faster()">x2</button>
-            </div>
-
-            <div style="width:300px;">
-                <h4 class="header4">Play controls</h4>
-                <button class="simulation-option" id="pause-unpause" onclick="pauseUnpause()">Pause</button>
-                <button class="simulation-option" id="pause-unpause" onclick="resetSimulation()">Reset</button>
-            </div>
-            <div style="width:300px;">
-                <h4 class="header4">Static objects</h4>
-                <input id="static-objects" onclick="changeStaticObjectsState()" type="checkbox" />
-                <label class="rule2-checkbox-label" id="static-objects-checkbox-label">Disabled</label>
-            </div>
-
-            <div style="width:300px;">
-                <h4 class="header4">Clamped object distance</h4>
-                <input id="clamped-distance" onclick="changeClampedDistanceState()" type="checkbox" />
-                <label class="rule2-checkbox-label" id="clamped-distance-checkbox-label">Disabled</label>
-            </div>
-
-            <div style="width:300px;" id="traces-holder">
-                <h4 class="header4">Traces (experimental)</h4>
-                <input id="object-traces" onclick="changeTracesState()" type="checkbox" />
-                <label class="rule2-checkbox-label" id="object-traces-checkbox-label">Disabled</label>
-            </div>
-
-            <div style="width:300px;">
-                <h4 class="header4">Collision (experimental)</h4>
-                <input id="collision" onclick="changeCollisionState()" type="checkbox" />
-                <label class="rule2-checkbox-label" id="object-collision-checkbox-label">Disabled</label>
-            </div>
-
-            <div style="width:300px;">
-                <h4 class="header4">Object option</h4>
-                <select style="width:150px" name="objects" id="selected-object" onChange="selectObject(this.value)">
-                    <option value="moon">Moon</option>
-                    <option value="earth">Earth</option>
-                    <option value="jupiter">Jupiter</option>
-                    <option value="sun">Sun</option>
-                </select>
-            </div>
-
-            <div style="width:300px; display:none;" id="object-stats-holder">
-                <h4 style="position:relative;" class="stats" id="object-velocity-x">Velocity X: m/s</h4>
-                <h4 style="position:relative;" class="stats" id="object-velocity-y">Velocity Y: m/s</h4>
-                <h4 style="position:relative;" class="stats" id="object-speed">Speed: m/s</h4>
-            </div>
-
-        </div>
-
-        <div class="canvas-holder" style="background-color:white;" oncontextmenu="return false;">
-
-            <h4 class="stats" id="speed">Speed: </h4>
-            <h4 class="stats second-stat" id="days">Days: </h4>
-            <h4 class="stats third-stat" id="fps">FPS: </h4>
-
-            <canvas id="canvas" width="1620" height="800" tabindex="0"></canvas>
-        </div>
 
     </div>
 
     <div id="popup" class="my-popup">
         <button class="close-poppup" onclick="closeAbout()">Close</button>
-        <h3 class="header4" style="color:white">Git repository </h3>
-        <a class="about-info" style="color:white" href="https://github.com/lubobul/2DNewtonGravityJS" target="blank">Get the code here</a>
-        <h3 class="header4" style="color:white">About </h3>
-        <p style="color:white" class="about-info"> 
+        <h3 class="header4">Git repository </h3>
+        <a class="about-info" href="https://github.com/lubobul/2DNewtonGravityJS" target="blank">Get the code here</a>
+        <h3 class="header4">About </h3>
+        <p class="about-info">
             The big O per frame varies depending on the selected options in the menu. The default FPS cap is 60. The default complexity is O(n*(n-1)) where n = OBJECTS_IN_SIMULATION. Using the experimental features changes big O. For instance turning ON traces changes complexity to O(n * (n-1) * 180) where 180 is a constant determening the size of stored trace coordinates in the trace stack. Enabling colision also adds overhead, however it doesn't change the amount of cycles. P.S. Adding too many objects to the simulation may exeed the capabilities of your browser or PC, thus resulting in lower FPS.
         </p>
-        <h3 class="header4" style="color:white">A Bit of History</h3>
-        <p style="color:white" class="about-info">This project was started purely as an intent to learn using the HTML5 canvas and applying some calculus in order to draw something interesting. Later on, after achieveing theoretical object attraction and repulsion and mapped static graphs on a canvas, I decided to animate some movement. At this step I introduced a simple object orientated render frame callback using browser's API. First the animated implementation was for 1 static and 1 dynamic objects. Next step was using 2 dynamic objects. A bigger step was introducing interraction between multiple objects. Later I advanced with adding proper time control, which in means brings the tool 1 step closer to simulation. Since it is not a descrete event simulation it seemed necessary to introduce time tracking. Tracing of objects and collision was later introduced as extras.</p>            
+        <h3 class="header4">A Bit of History</h3>
+        <p class="about-info">This project was started purely as an intent to learn using the HTML5 canvas and applying some calculus in order to draw something interesting. Later on, after achieveing theoretical object attraction and repulsion and mapped static graphs on a canvas, I decided to animate some movement. At this step I introduced a simple object orientated render frame callback using browser's API. First the animated implementation was for 1 static and 1 dynamic objects. Next step was using 2 dynamic objects. A bigger step was introducing interraction between multiple objects. Later I advanced with adding proper time control, which in means brings the tool 1 step closer to simulation. Since it is not a descrete event simulation it seemed necessary to introduce time tracking. Tracing of objects and collision was later introduced as extras.</p>
+        <h3 class="header4">Tips</h3>
+        <p>For new object - drag across the canvas</p>
+        <p>For object stats - right click on object</p>
+
     </div>
 
     <script src="animationEngine.js"></script>
