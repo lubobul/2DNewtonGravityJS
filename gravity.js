@@ -4,9 +4,6 @@ window.onload = function ()
 {
     invertCanvasAxis();
 
-    offsetX = canvas.width / 2;
-    offsetY = canvas.height / 2;
-
     initXYAxis();
 
     selectObject('moon');
@@ -254,9 +251,23 @@ function cartesianToPolar(x, y)
 //Canvas Mouse controls
 var offsetX = 0;
 var offsetY = 0;
+let canvasHolder = document.getElementsByClassName('canvas-holder')[0];
 
-var c = document.getElementById("canvas");
-var ctx = c.getContext("2d");
+function resizeCanvas() {
+
+    if(canvas.width != canvasHolder.clientWidth || canvas.height != canvasHolder.clientHeight){
+        ctx.canvas.width = canvasHolder.clientWidth;
+        ctx.canvas.height = canvasHolder.clientHeight;
+    
+        offsetX = canvas.width / 2;
+        offsetY = canvas.height / 2;
+
+        invertCanvasAxis();
+    }
+}
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
 
 //Get Canvas Coordinates on click
 canvas.addEventListener("mousedown", mouseDown, false);
@@ -321,10 +332,10 @@ function getMouseCoordinates(e)
         y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
 
-    x -= c.offsetLeft;
-    y -= c.offsetTop;
+    x -= canvas.offsetLeft;
+    y -= canvas.offsetTop;
 
-    y = c.height - y; //invert y axis (click coordinates are not affected when inverting canvas axis)
+    y = canvas.height - y; //invert y axis (click coordinates are not affected when inverting canvas axis)
 
 
     return {x, y}
@@ -419,10 +430,16 @@ function clearCanvas()
 }
 
 var fps_element = document.getElementById("fps");
+let accumulatedTimeUpdateFps = 1;
 //Update fps element
-function updateFps(fps)
+function updateFps(fps, delta_time)
 {
-    fps_element.innerHTML = "FPS: " + Math.round(fps);
+    if(accumulatedTimeUpdateFps < 0.5){
+        accumulatedTimeUpdateFps += delta_time;
+    }else{
+        accumulatedTimeUpdateFps = 0;
+        fps_element.innerHTML = "FPS: " + Math.round(fps);
+    }
 }
 
 var days_element = document.getElementById("days");
@@ -846,7 +863,9 @@ var addTracePoint = 0;
 function animate()
 {
 
-    updateFps(animationEngine.fps);
+    resizeCanvas();
+
+    updateFps(animationEngine.fps, animationEngine.delta_time);
 
     // t - time between calculting new positions
     t = elapsedSimulatedTimePerSimulationSec * animationEngine.delta_time;

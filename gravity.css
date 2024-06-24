@@ -2,7 +2,7 @@ body {
     font-size: .85em;
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
     color: #232323;
-    background-color: #fff;
+    background-color: #fafafa;
 }
 
 header, footer, nav, section {
@@ -130,6 +130,7 @@ input.extra-width {
 }
 
 .canvas-holder {
+    flex-grow: 1;
     float: left;
     width: auto;
     -webkit-box-shadow: 0 0 3px rgba(0,0,0, .75);
@@ -138,16 +139,15 @@ input.extra-width {
     background-color: white;
 }
 
-
+#canvas{
+    width: 100%;
+    height: 90vh;
+}
 
 .info {
     margin: 0px 2px 0px 2px;
     padding: 0px 2px 0px 2px;
     color: gray;
-}
-
-body {
-    background-color: #fafafa;
 }
 
 .rule2-holder {
