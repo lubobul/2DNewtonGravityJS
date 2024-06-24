@@ -30,7 +30,6 @@
 
                 <h3 class="header4">Controls</h3>
 
-
                 <div style="width:300px;">
                     <h4 class="header4">Speed controls </h4>
                     <button class="simulation-option" onclick="slower()">/2</button>
@@ -75,24 +74,26 @@
                         <option value="sun">Sun</option>
                     </select>
                 </div>
-
-                <div style="width:300px; display:none;" id="object-stats-holder">
-                    <h4 style="position:relative;" class="stats" id="object-velocity-x">Velocity X: m/s</h4>
-                    <h4 style="position:relative;" class="stats" id="object-velocity-y">Velocity Y: m/s</h4>
-                    <h4 style="position:relative;" class="stats" id="object-speed">Speed: m/s</h4>
-                </div>
-
             </div>
             <div class="canvas-holder" oncontextmenu="return false;">
 
-                <h4 class="stats" id="speed">Speed: </h4>
-                <h4 class="stats second-stat" id="days">Days: </h4>
-                <h4 class="stats third-stat" id="fps">FPS: </h4>
+                <div class="stats-wrapper">
+                    <div class="simulation-stats-wrapper">
+                        <h4 class="stats" id="speed">Speed: </h4>
+                        <h4 class="stats second-stat" id="days">Days: </h4>
+                        <h4 class="stats third-stat" id="fps">FPS: </h4>
+                    </div>
+
+                    <div style="display:none;" class="object-stats-wrapper" id="object-stats-holder">
+                        <h4 style="position:relative;" class="stats" id="object-velocity-x">Velocity X: m/s</h4>
+                        <h4 style="position:relative;" class="stats" id="object-velocity-y">Velocity Y: m/s</h4>
+                        <h4 style="position:relative;" class="stats" id="object-speed">Speed: m/s</h4>
+                    </div>
+                </div>
 
                 <canvas id="canvas" tabindex="0"></canvas>
             </div>
         </div>
-
 
     </div>
 

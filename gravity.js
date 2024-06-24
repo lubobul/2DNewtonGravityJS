@@ -859,10 +859,8 @@ var elapsedSimulatedTimePerSimulationSec = 86400; //86400 secs = 1 day
 var days = 0;
 var addTracePoint = 0;
 
-//callback funtcion given to animation engine called once per frame
-function animate()
-{
-
+//callback function given to animation engine called once per frame
+function animate() {
     resizeCanvas();
 
     updateFps(animationEngine.fps, animationEngine.delta_time);

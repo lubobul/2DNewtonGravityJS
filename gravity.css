@@ -139,6 +139,21 @@ input.extra-width {
     background-color: white;
 }
 
+.stats-wrapper{
+    display: flex;
+    flex-flow: row;
+    position: absolute;
+}
+
+.object-stats-wrapper{
+    margin-left: 1.2rem;
+}
+
+.simulation-stats-wrapper{
+    display: flex;
+    flex-flow: column;
+}
+
 #canvas{
     width: 100%;
     height: 90vh;
@@ -215,16 +230,8 @@ h4.stats {
     padding: 0px 0px 2px 2px;
     margin: 0px 0px 2px 2px;
     color: #83d53b;
-    position: absolute;
+    /*position: absolute;*/
     display: block;
     font-weight: normal !important;
     pointer-events: none !important;
-}
-
-.second-stat {
-    margin-top: 1.2em !important;
-}
-
-.third-stat {
-    margin-top: 2.4em !important;
 }
