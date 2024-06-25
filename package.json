@@ -4,8 +4,9 @@
   "description": "This project demonstrates the simulation of Newtonian gravity in 2D Gravity of N Bodies.",
   "main": "index.js",
   "scripts": {
-    "bundle": "esbuild dist/*.js --bundle --outfile=dist/bundle.js",
-    "build": "tsc && npm run bundle"
+    "bundle": "node esbuild.mjs",
+    "build": "tsc && npm run bundle",
+    "serve": "npm run build && esbuild --watch --servedir=./"
   },
   "repository": {
     "type": "git",
