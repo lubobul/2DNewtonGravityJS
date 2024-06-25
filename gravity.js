@@ -542,8 +542,19 @@ function planetaryMode()
         mass: 5.972 * Math.pow(10, 24)
     }
 
+    // //Moon
+    // let body5 = {
+    //     color: "grey",
+    //     diameter: 2000000,
+    //     x: 0,
+    //     y: 149600000000 + 390000000,
+    //     v_x: (29800 + 1022) * Math.cos(degToRad(0)),
+    //     v_y: (29800 + 1022) * Math.sin(degToRad(0)),
+    //     mass: 7.342 * Math.pow(10, 22)
+    // }
+
     //mars
-    let body5 = {
+    let body6 = {
         color: "red",
         diameter: 6779000,
         x: 0,
@@ -554,15 +565,15 @@ function planetaryMode()
     }
 
     //Jupiter
-    let body6 = {
-        color: "orange",
-        diameter: 139822000,
-        x: 0,
-        y: 778500000000,
-        v_x: 13070 * Math.cos(degToRad(0)),
-        v_y: 13070 * Math.sin(degToRad(0)),
-        mass: 1.898 * Math.pow(10, 27)
-    }
+    // let body6 = {
+    //     color: "orange",
+    //     diameter: 139822000,
+    //     x: 0,
+    //     y: 778500000000,
+    //     v_x: 13070 * Math.cos(degToRad(0)),
+    //     v_y: 13070 * Math.sin(degToRad(0)),
+    //     mass: 1.898 * Math.pow(10, 27)
+    // }
 
 
     //Mercury to Jupiter real simulation
@@ -570,8 +581,8 @@ function planetaryMode()
     simulationObjects.push(body2);
     simulationObjects.push(body3);
     simulationObjects.push(body4);
-    simulationObjects.push(body5);
-    //initObjects.push(body6);
+    // simulationObjects.push(body5);
+    simulationObjects.push(body6);
 
 }
 

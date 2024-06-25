@@ -1,0 +1,29 @@
+{
+  "name": "2dnewtongravity",
+  "version": "1.0.0",
+  "description": "This project demonstrates the simulation of Newtonian gravity in 2D Gravity of N Bodies.",
+  "main": "index.js",
+  "scripts": {
+    "bundle": "esbuild dist/*.js --bundle --outfile=dist/bundle.js",
+    "build": "tsc && npm run bundle"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lubobul/2DNewtonGravityJS.git"
+  },
+  "keywords": [
+    "gravity",
+    "newton",
+    "simulation"
+  ],
+  "author": "Lyubomir Stoychev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lubobul/2DNewtonGravityJS/issues"
+  },
+  "homepage": "https://github.com/lubobul/2DNewtonGravityJS#readme",
+  "devDependencies": {
+    "typescript": "5.5.2",
+    "esbuild": "0.21.5"
+  }
+}
