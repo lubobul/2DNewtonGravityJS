@@ -4,5 +4,5 @@ await esbuild.build({
     entryPoints: ['gravity/index.ts'],
     bundle: true,
     sourcemap: true,
-    outfile: 'bundle.js',
+    outfile: 'out/bundle.js',
 });
