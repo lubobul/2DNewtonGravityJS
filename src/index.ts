@@ -1,4 +1,4 @@
-import {AnimationEngine} from "./animation-engine";
+import {AnimationEngine} from "./engine/animation-engine";
 
 export class FooBar{
     public name: string;
