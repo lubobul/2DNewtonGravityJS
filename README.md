@@ -1,5 +1,6 @@
-# 2DNewtonGravityJS
+# 2DNewtonGravityJS - Legacy
 This tool is written in vanilla JavaScript and is intended for experimenting with Newton's universal gravitation in 2D environment.
+This is the initial JS legacy version. The current version of the tool is rewritten in Typescript.
 
 ## Complexity
 The big O per frame varies depending on the selected options in the menu. The default FPS cap is 60. The default complexity is O(n*(n-1)) where n = **OBJECTS_IN_SIMULATION**. Using the experimental features changes big O. For instance turning ON **traces** changes complexity to O(n * (n-1) * 180) where **180** is a constant determening the size of stored trace coordinates in the trace stack. Enabling colision also adds overhead, however it doesn't change the amount of cycles.
