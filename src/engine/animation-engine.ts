@@ -1,5 +1,4 @@
-export class AnimationEngine
-{
+export class AnimationEngine {
     private animationFrameCallback: Function = null;
     private requestAnimationFrame: (callBack: Function) => void;
 

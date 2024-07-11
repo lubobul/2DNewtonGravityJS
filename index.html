@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="gravity.css">
+    <link rel="stylesheet" href="styles.css">
 
     <title>Gravity v1.0</title>
 </head>
@@ -22,7 +22,7 @@
             <button class="simulation-option menu-options-button" onclick="particles2()">Attraction</button>
             <button class="simulation-option menu-options-button" onclick="particles3()">Repulsion</button>
             <button class="simulation-option menu-options-button" onclick="particles4()">Explosion</button>
-            <button class="simulation-option menu-options-button" onclick="about()">About</button>
+            <button class="simulation-option menu-options-button" onclick="uiControls.about()">About</button>
         </div>
 
         <div class="menu-canvas-wrapper">
@@ -113,9 +113,9 @@
 
     </div>
 
-    <script src="animationEngine.js"></script>
-    <script src="gravity.js"></script>
-    <script src="out/bundle.js"></script>
+<!--    <script src="animationEngine.js"></script>-->
+<!--    <script src="gravity.js"></script>-->
+    <script type="module" src="./index.js"></script>
 <!--    <script src="bundle.js.map"></script>-->
 </body>
 </html>

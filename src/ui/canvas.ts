@@ -1,19 +1,17 @@
 import {Coordinates} from "./types";
 
 export class Canvas {
-    private readonly canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
 
-    constructor(canvasId: string,
+    constructor(private canvas: HTMLCanvasElement,
                 private offsetX: number,
                 private offsetY: number,
-                public onMouseLeftClick: (coordinates: Coordinates) => void,
-                public onMouseRightClick: (coordinates: Coordinates) => void,
-                public onMouseLeftClickUp: (coordinates: Coordinates) => void,
-                public onMouseRightClickUp: (coordinates: Coordinates) => void,
-                public onMouseMove: (coordinates: Coordinates) => void,
+                public onMouseLeftClick: (coordinates: Coordinates) => void = null,
+                public onMouseRightClick: (coordinates: Coordinates) => void = null,
+                public onMouseLeftClickUp: (coordinates: Coordinates) => void = null,
+                public onMouseRightClickUp: (coordinates: Coordinates) => void = null,
+                public onMouseMove: (coordinates: Coordinates) => void = null,
     ) {
-        this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
         this.ctx = this.canvas.getContext("2d");
 
         //Get Canvas Coordinates on click
@@ -23,15 +21,15 @@ export class Canvas {
 
 
 //Gets the coordinates of a click over the canvas ( will be used in future for object creation, drag and drop etc.)
-    public mouseDown(e) {
+    public mouseDown(e: MouseEvent) {
         if (e.button === 2) { //right click
             //showStatsForObject(e);
-            if(this.onMouseRightClick){
+            if (this.onMouseRightClick) {
                 this.onMouseRightClick(this.getMouseCoordinates(e));
             }
         } else {
             //shouldDrawDirectionVector = true;
-            if(this.onMouseLeftClick){
+            if (this.onMouseLeftClick) {
                 this.onMouseLeftClick(this.getMouseCoordinates(e));
             }
             // object_vector_start_x = coordinates.x;
@@ -44,15 +42,15 @@ export class Canvas {
         }
     }
 
-    public mouseUp(e) {
+    public mouseUp(e: MouseEvent) {
         if (e.button === 2) {
             //right click
-            if(this.onMouseRightClickUp){
+            if (this.onMouseRightClickUp) {
                 this.onMouseRightClickUp(this.getMouseCoordinates(e));
             }
         } else {
             //shouldDrawDirectionVector = false;
-            if(this.onMouseLeftClickUp){
+            if (this.onMouseLeftClickUp) {
                 this.onMouseLeftClickUp(this.getMouseCoordinates(e));
             }
             this.canvas.removeEventListener("mousemove", this.mouseMove, false);
@@ -60,15 +58,15 @@ export class Canvas {
         }
     }
 
-    public mouseMove(e) {
-        if(this.onMouseMove){
+    public mouseMove(e: MouseEvent) {
+        if (this.onMouseMove) {
             this.onMouseMove(this.getMouseCoordinates(e));
         }
         // object_vector_direction_x = coordinates.x;
         // object_vector_direction_y = coordinates.y;
     }
 
-    public getMouseCoordinates(e): Coordinates {
+    public getMouseCoordinates(e: MouseEvent): Coordinates {
         var x;
         var y;
 
