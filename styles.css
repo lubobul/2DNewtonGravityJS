@@ -54,6 +54,12 @@ p {
     color: gray;
 }
 
+.header2 {
+    padding: 2px 0px 2px 0px;
+    margin: 2px 0px 2px 0px;
+    color: whitesmoke;
+}
+
 input.my-inputs {
     padding: 5px 15px;
     background: #f3f3f3;
