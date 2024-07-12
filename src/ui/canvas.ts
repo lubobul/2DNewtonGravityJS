@@ -1,22 +1,38 @@
 import {Coordinates} from "./types";
 
 export class Canvas {
-    private ctx: CanvasRenderingContext2D;
+    get ctx(): CanvasRenderingContext2D {
+        return this._ctx;
+    }
+    get offsetX(): number {
+        return this._offsetX;
+    }
+
+    get offsetY(): number {
+        return this._offsetY;
+    }
+    private readonly _ctx: CanvasRenderingContext2D;
+
+    private _offsetX = 0;
+    private _offsetY = 0;
 
     constructor(private canvas: HTMLCanvasElement,
-                private offsetX: number,
-                private offsetY: number,
-                public onMouseLeftClick: (coordinates: Coordinates) => void = null,
-                public onMouseRightClick: (coordinates: Coordinates) => void = null,
-                public onMouseLeftClickUp: (coordinates: Coordinates) => void = null,
-                public onMouseRightClickUp: (coordinates: Coordinates) => void = null,
-                public onMouseMove: (coordinates: Coordinates) => void = null,
+                private canvasContainer?: Element,
+                public onMouseLeftClick?: (coordinates: Coordinates) => void,
+                public onMouseRightClick?: (coordinates: Coordinates) => void,
+                public onMouseLeftClickUp?: (coordinates: Coordinates) => void,
+                public onMouseRightClickUp?: (coordinates: Coordinates) => void,
+                public onMouseMove?: (coordinates: Coordinates) => void,
+
     ) {
-        this.ctx = this.canvas.getContext("2d");
+        this._ctx = this.canvas.getContext("2d");
+
+        this._offsetX = this.canvas.width / 2;
+        this._offsetY = this.canvas.height / 2;
 
         //Get Canvas Coordinates on click
-        this.canvas.addEventListener("mousedown", this.mouseDown, false);
-        this.canvas.addEventListener("mouseup", this.mouseUp, false);
+        this.canvas.addEventListener("mousedown", this.mouseDown.bind(this), false);
+        this.canvas.addEventListener("mouseup", this.mouseUp.bind(this), false);
     }
 
 
@@ -38,7 +54,7 @@ export class Canvas {
             // object_vector_direction_x = object_vector_start_x;
             // object_vector_direction_y = object_vector_start_y;
 
-            this.canvas.addEventListener("mousemove", this.mouseMove, false);
+            this.canvas.addEventListener("mousemove", this.mouseMove.bind(this), false);
         }
     }
 
@@ -93,12 +109,12 @@ export class Canvas {
 
 //Invert canvas
     public invertCanvasAxis() {
-        this.ctx.transform(1, 0, 0, -1, 0, this.canvas.height);
+        this._ctx.transform(1, 0, 0, -1, 0, this.canvas.height);
     }
 
 //Draw a line from posX,posY to posXto, posYto with offset
     public drawPixel(x: number, y: number) {
-        this.ctx.fillRect(x + this.offsetX, y + this.offsetY, 1, 1);
+        this._ctx.fillRect(x + this._offsetX, y + this._offsetY, 1, 1);
     }
 
 //Draw a line from posX,posY to posXto, posYto without offset
@@ -111,23 +127,23 @@ export class Canvas {
         lineColor: string,
         segments?: number[]): void {
         if (segments) {
-            this.ctx.setLineDash(segments);
+            this._ctx.setLineDash(segments);
         }
 
-        this.ctx.lineWidth = lineWidth;
-        this.ctx.strokeStyle = lineColor;
+        this._ctx.lineWidth = lineWidth;
+        this._ctx.strokeStyle = lineColor;
 
-        this.ctx.beginPath();
-        this.ctx.moveTo(posX, posY);
-        this.ctx.lineTo(posXto, posYto);
-        this.ctx.closePath();
-        this.ctx.stroke();
+        this._ctx.beginPath();
+        this._ctx.moveTo(posX, posY);
+        this._ctx.lineTo(posXto, posYto);
+        this._ctx.closePath();
+        this._ctx.stroke();
         //restore
-        this.ctx.setLineDash([0, 0]);
+        this._ctx.setLineDash([0, 0]);
     }
 
     public drawObjectWithOffset(posX: number, posY: number, radius: number, color: string) {
-        this.drawObject(posX + this.offsetX, posY + this.offsetY, radius, color);
+        this.drawObject(posX + this._offsetX, posY + this._offsetY, radius, color);
     }
 
     public drawObjectNoOffset(posX: number, posY: number, radius: number, color: string) {
@@ -136,11 +152,11 @@ export class Canvas {
 
 //Draws an oval object
     public drawObject(posX: number, posY: number, radius: number, color: string): void {
-        this.ctx.beginPath();
-        this.ctx.arc(posX, posY, radius, 0, 2 * Math.PI, false);
-        this.ctx.closePath();
-        this.ctx.fillStyle = color;
-        this.ctx.fill();
+        this._ctx.beginPath();
+        this._ctx.arc(posX, posY, radius, 0, 2 * Math.PI, false);
+        this._ctx.closePath();
+        this._ctx.fillStyle = color;
+        this._ctx.fill();
     }
 
 //Draws the X Y dahsed AXIS
@@ -152,6 +168,22 @@ export class Canvas {
     }
 
     public clearCanvas(): void {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this._ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    public resizeCanvasToFitContainer(): void {
+        if(!this.canvasContainer){
+            return;
+        }
+
+        if(this.canvas.width != this.canvasContainer.clientWidth || this.canvas.height != this.canvasContainer.clientHeight){
+            this._ctx.canvas.width = this.canvasContainer.clientWidth;
+            this._ctx.canvas.height = this.canvasContainer.clientHeight;
+
+            this._offsetX = this.canvas.width / 2;
+            this._offsetY = this.canvas.height / 2;
+
+            this.invertCanvasAxis();
+        }
     }
 }

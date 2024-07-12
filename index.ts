@@ -1,35 +1,31 @@
 import {AnimationEngine} from "./src/engine/animation-engine";
 import {UiControls} from "./src/ui/ui-controls";
+import {GravityEngine} from "./src/engine/gravity-engine";
+import {SimulationEngine} from "./src/engine/simulation-engine";
+import {Canvas} from "./src/ui/canvas";
 export * from "./src/ui/ui-controls";
-(window as any).uiControls = new UiControls();
+
+
 window.onload = function ()
 {
-    // invertCanvasAxis();
-    //
-    // initXYAxis();
-    //
-    // selectObject('moon');
-    //
-    // planetaryMode();
+    var canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
+    let canvasHolder = document.getElementsByClassName('canvas-holder')[0];
 
-    loadAnimationEngine();
-}
+    const gravityEngine = new GravityEngine();
+    const uiControls = new UiControls(gravityEngine);
+    (window as any).uiControls = uiControls;
 
-function loadAnimationEngine(): void
-{
-    let animationEngine = new AnimationEngine();
-    animationEngine.setAnimationFrameCallback(animate);
+    const simulationEngine = new SimulationEngine(
+        new AnimationEngine(),
+        new Canvas(
+            canvas,
+            canvasHolder
+        ),
+        uiControls,
+        gravityEngine,
+    );
 
-    animationEngine.start();
-}
-let accumulatedTimeUpdateFps = 0;
+    uiControls.simulationEngine = simulationEngine;
 
-function animate(): void{
-
-    if(accumulatedTimeUpdateFps < 0.5){
-        accumulatedTimeUpdateFps += this.delta_time;
-    }else{
-        accumulatedTimeUpdateFps = 0;
-        console.log("FPS: " + Math.round(this.fps));
-    }
+    simulationEngine.start();
 }
