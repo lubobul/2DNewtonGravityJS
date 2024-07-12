@@ -6,10 +6,9 @@ import {Canvas} from "./src/ui/canvas";
 export * from "./src/ui/ui-controls";
 
 
-window.onload = function ()
-{
-    var canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
-    let canvasHolder = document.getElementsByClassName('canvas-holder')[0];
+window.onload = () => {
+    const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
+    const canvasHolder = document.getElementsByClassName('canvas-holder')[0];
 
     const gravityEngine = new GravityEngine();
     const uiControls = new UiControls(gravityEngine);

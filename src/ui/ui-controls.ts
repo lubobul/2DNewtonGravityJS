@@ -2,7 +2,7 @@ import {Body} from "../engine/types";
 import {GravityEngine} from "../engine/gravity-engine";
 import {SimulationEngine} from "../engine/simulation-engine";
 
-export class UiControls{
+export class UiControls {
     get gravitationalObjectSelection(): Body {
         return this._gravitationalObjectSelection;
     }
@@ -13,7 +13,7 @@ export class UiControls{
         private gravityEngine: GravityEngine,
         public simulationEngine?: SimulationEngine,
     ) {
-        this.selectObject("earth");
+        this.selectObject("moon");
     }
 
     public about(): void {
@@ -27,7 +27,7 @@ export class UiControls{
     }
 
 //increase speed simulation by a factor of 2
-    public faster(): void{
+    public faster(): void {
         this.simulationEngine.elapsedSimulationTimePerSecond *= 2;
 
         this.updateSpeed();
@@ -40,8 +40,8 @@ export class UiControls{
         this.updateSpeed();
     }
 
-    public  pauseUnpause(): void {
-        if (this.simulationEngine.isRunning){
+    public pauseUnpause(): void {
+        if (this.simulationEngine.isRunning) {
             document.getElementById("pause-unpause").innerHTML = "Unpause";
         } else {
             document.getElementById("pause-unpause").innerHTML = "Pause";
@@ -57,75 +57,65 @@ export class UiControls{
     //         reset_delegate.call();
     // }
     //
-    // public  changeStaticObjectsState(): void {
-    //     areStaticObjectsOn = document.getElementById("static-objects").checked;
-    //
-    //     if (areStaticObjectsOn)
-    //     {
-    //         document.getElementById("static-objects-checkbox-label").innerHTML = "Enabled";
-    //     }
-    //     else
-    //     {
-    //         document.getElementById("static-objects-checkbox-label").innerHTML = "Disabled";
-    //     }
-    // }
-    //
-    // public  changeClampedDistanceState(): void {
-    //     isDistanceBetweenObjectsClamped = document.getElementById("clamped-distance").checked;
-    //
-    //     if (isDistanceBetweenObjectsClamped) {
-    //         document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
-    //     }
-    //     else {
-    //         document.getElementById("clamped-distance-checkbox-label").innerHTML = "Disabled";
-    //     }
-    // }
+    public changeStaticObjectsState(): void {
+        this.gravityEngine.staticObjectsEnabled = (document.getElementById("static-objects") as any).checked;
 
-    // public  changeTracesState(): void {
-    //     areTracesOn = document.getElementById("object-traces").checked;
-    //
-    //     objectTraceStack = [];
-    //
-    //     if (areTracesOn)
-    //     {
-    //         document.getElementById("object-traces-checkbox-label").innerHTML = "Enabled";
-    //     }
-    //     else
-    //     {
-    //         document.getElementById("object-traces-checkbox-label").innerHTML = "Disabled";
-    //     }
-    // }
+        if (this.gravityEngine.staticObjectsEnabled) {
+            document.getElementById("static-objects-checkbox-label").innerHTML = "Enabled";
+        } else {
+            document.getElementById("static-objects-checkbox-label").innerHTML = "Disabled";
+        }
+    }
 
-    // public  changeCollisionState(): void {
-    //     isColisionModeOn = document.getElementById("collision").checked;
-    //
-    //     if (isColisionModeOn)
-    //     {
-    //         document.getElementById("object-collision-checkbox-label").innerHTML = "Enabled";
-    //     }
-    //     else
-    //     {
-    //         document.getElementById("object-collision-checkbox-label").innerHTML = "Disabled";
-    //     }
-    // }
+    public changeClampedDistanceState(): void {
+        this.gravityEngine.clampedDistanceBetweenObjectsEnabled = (document.getElementById("clamped-distance") as any).checked;
 
-    public  hideTracesOption(): void {
-        var popup = document.getElementById("traces-holder");
+        if (this.gravityEngine.clampedDistanceBetweenObjectsEnabled) {
+            document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
+        } else {
+            document.getElementById("clamped-distance-checkbox-label").innerHTML = "Disabled";
+        }
+    }
+
+    public changeTracesState(): void {
+        this.simulationEngine.tracesEnabled = (document.getElementById("object-traces") as any).checked;
+
+        this.gravityEngine.clearTracesStack();
+
+        if (this.simulationEngine.tracesEnabled) {
+            document.getElementById("object-traces-checkbox-label").innerHTML = "Enabled";
+        } else {
+            document.getElementById("object-traces-checkbox-label").innerHTML = "Disabled";
+        }
+    }
+
+    public changeCollisionState(): void {
+        this.gravityEngine.collisionEnabled = (document.getElementById("collision") as any).checked;
+
+        if (this.gravityEngine.collisionEnabled) {
+            document.getElementById("object-collision-checkbox-label").innerHTML = "Enabled";
+        } else {
+            document.getElementById("object-collision-checkbox-label").innerHTML = "Disabled";
+        }
+    }
+
+    public hideTracesOption(): void {
+        const popup = document.getElementById("traces-holder");
         popup.style.display = 'none';
     }
 
-    public  showTracesOption(): void {
-        var popup = document.getElementById("traces-holder");
+    public showTracesOption(): void {
+        const popup = document.getElementById("traces-holder");
         popup.style.display = 'block';
     }
 
-    public  hideObjectStats(): void {
-        var popup = document.getElementById("object-stats-holder");
+    public hideObjectStats(): void {
+        const popup = document.getElementById("object-stats-holder");
         popup.style.display = 'none';
     }
 
-    public  showObjectStats(): void {
-        var popup = document.getElementById("object-stats-holder");
+    public showObjectStats(): void {
+        const popup = document.getElementById("object-stats-holder");
         popup.style.display = 'block';
     }
 
@@ -153,7 +143,7 @@ export class UiControls{
     // }
 
 //Change selected object for adding it into the simulation via drag&drop
-    public  selectObject(value) : void {
+    public selectObject(value): void {
         if (value == 'earth') {
             this._gravitationalObjectSelection = {
                 color: "blue",
@@ -165,9 +155,7 @@ export class UiControls{
                 v_y: 0,
                 mass: 5.972 * Math.pow(10, 24)
             }
-
-        }
-        else if (value == 'jupiter') {
+        } else if (value == 'jupiter') {
             this._gravitationalObjectSelection = {
                 color: "orange",
                 diameter: 139822000 / 10,
@@ -178,8 +166,7 @@ export class UiControls{
                 v_y: 0,
                 mass: 1.898 * Math.pow(10, 27)
             }
-        }
-        else if (value == 'sun') {
+        } else if (value == 'sun') {
             this._gravitationalObjectSelection = {
                 color: "yellow",
                 diameter: 1391400000 / 30,
@@ -206,31 +193,34 @@ export class UiControls{
 
     private readonly fps_element = document.getElementById("fps");
     private accumulatedTimeUpdateFps: number = 1;
+
 //Update fps element
     public updateFps(fps: number, delta_time: number): void {
-        if(this.accumulatedTimeUpdateFps < 0.5){
+        if (this.accumulatedTimeUpdateFps < 0.5) {
             this.accumulatedTimeUpdateFps += delta_time;
-        }else{
+        } else {
             this.accumulatedTimeUpdateFps = 0;
             this.fps_element.innerHTML = "FPS: " + Math.round(fps);
         }
     }
 
-    private  readonly days_element = document.getElementById("days");
+    private readonly days_element = document.getElementById("days");
+
 //Update days element
     public updateDays(days: number): void {
         this.days_element.innerHTML = "Days: " + Math.round(days * 100) / 100;
     }
 
     private speed_element = document.getElementById("speed");
+
 //Update speed element
     public updateSpeed(): void {
         this.speed_element.innerHTML = "Speed: " + this.simulationEngine.elapsedSimulationTimePerSecond + "x";
     }
 
     private readonly obj_velocity_x_element = document.getElementById("object-velocity-x");
-    private readonly  obj_velocity_y_element = document.getElementById("object-velocity-y");
-    private readonly  obj_speed_element = document.getElementById("object-speed");
+    private readonly obj_velocity_y_element = document.getElementById("object-velocity-y");
+    private readonly obj_speed_element = document.getElementById("object-speed");
 
 //Update object stats
     public updateObjectStats(body: Body): void {

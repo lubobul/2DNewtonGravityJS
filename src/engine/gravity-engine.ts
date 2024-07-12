@@ -2,9 +2,34 @@ import {Body, BodyForce, Collision} from "./types";
 import {Coordinates} from "../ui/types";
 
 export class GravityEngine {
+    get clampedDistanceBetweenObjectsEnabled(): boolean {
+        return this._clampedDistanceBetweenObjectsEnabled;
+    }
+
+    set clampedDistanceBetweenObjectsEnabled(value: boolean) {
+        this._clampedDistanceBetweenObjectsEnabled = value;
+    }
+
+    get staticObjectsEnabled(): boolean {
+        return this._staticObjectsEnabled;
+    }
+
+    set staticObjectsEnabled(value: boolean) {
+        this._staticObjectsEnabled = value;
+    }
+
+    get collisionEnabled(): boolean {
+        return this._collisionEnabled;
+    }
+
+    set collisionEnabled(value: boolean) {
+        this._collisionEnabled = value;
+    }
+
     get objectsTrajectoriesStack(): Coordinates[][] {
         return this._objectsTrajectoriesStack;
     }
+
     get gravitationalObjects(): Body[] {
         return this._gravitationalObjects;
     }
@@ -12,33 +37,34 @@ export class GravityEngine {
     set gravitationalObjects(value: Body[]) {
         this._gravitationalObjects = value;
     }
+
     private _gravitationalObjects: Body[] = [];
 
     private tmp_F: BodyForce;
     private currentObject: Body;
 
-//Net force mussed be calculated for each object compared to each of the rest of objects (sum of all forces applied to a particular object)
+    //Net force mussed be calculated for each object compared to each of the rest of objects (sum of all forces applied to a particular object)
     private net_F_x: number;
     private net_F_y: number;
     private newObjects: Body[] = [];
     private numOfObjects: number;
-    private areStaticObjectsOn: boolean = false;
+    private _staticObjectsEnabled: boolean = false;
 
     private secondObject: Body = null;
     private distance_bodies_0: number = 0;
     private distance_bodies_1: number = 0;
-    private isColisionModeOn: boolean = false;
-    private isDistanceBetweenObjectsClamped: boolean = false;
-    private colidedObjects: Collision = null;
+    private _collisionEnabled: boolean = false;
+    private _clampedDistanceBetweenObjectsEnabled: boolean = false;
+    private collidedGravityObjects: Collision = null;
     private readonly G: number = 6.674 * Math.pow(10, -11);
-//Elapsed time between 2 points in 2D space between the "static" and the moving object
+    //Elapsed time between 2 points in 2D space between the "static" and the moving object
     private elapsedSimulationTimeSeconds: number = 1; //seconds
 
     private _objectsTrajectoriesStack: Coordinates[][] = [];
     //length of trace behind objects in number of kept calcukated positions
-    private objectsTrajectoryStackSize  = 180;
+    private objectsTrajectoryStackSize = 180;
 
-//This is the main function for calculating N object interaction, called 1ce per frame
+    //This is the main function for calculating N object interaction, called 1ce per frame
     public calculateMultipleObjects(deltaTimeSeconds: number) {
         this.elapsedSimulationTimeSeconds = deltaTimeSeconds;
         this.newObjects = [];
@@ -54,7 +80,7 @@ export class GravityEngine {
                 this.tmp_F = null;
 
                 //check if an object is static, skip calculations if true
-                if (!this.areStaticObjectsOn || (((this.currentObject.v_x + this.currentObject.v_y) != 0) && this.areStaticObjectsOn)) {
+                if (!this._staticObjectsEnabled || (((this.currentObject.v_x + this.currentObject.v_y) != 0) && this._staticObjectsEnabled)) {
                     this.calculateObjectInteraction(i);
                 }
 
@@ -73,7 +99,7 @@ export class GravityEngine {
         }
     }
 
-//All object iteraction goes here
+    //All object iteraction goes here
     private calculateObjectInteraction(i: number) {
 
         for (let j = 0; j < this.numOfObjects; j++) {
@@ -87,7 +113,7 @@ export class GravityEngine {
                 if (i != j) {
 
                     //clamp the closest distance between 2 objects
-                    if ((this.currentObject.diameter / 2 + this.secondObject.diameter / 2) > this.distance_bodies_0 && this.isDistanceBetweenObjectsClamped)
+                    if ((this.currentObject.diameter / 2 + this.secondObject.diameter / 2) > this.distance_bodies_0 && this._clampedDistanceBetweenObjectsEnabled)
                         this.distance_bodies_0 = (this.currentObject.diameter / 2) + (this.secondObject.diameter / 2);
 
                     this.tmp_F = this.calcForce2Bodies(this.currentObject, this.secondObject, this.distance_bodies_0);
@@ -97,20 +123,20 @@ export class GravityEngine {
                     this.net_F_y += this.tmp_F.F_y;
 
                     //Colision
-                    if (this.isColisionModeOn) {
+                    if (this._collisionEnabled) {
                         if (this.currentObject.mass < this.secondObject.mass) {
-                            this.colidedObjects = this.calculateCollision(this.secondObject, this.currentObject, this.distance_bodies_1);
+                            this.collidedGravityObjects = this.calculateCollision(this.secondObject, this.currentObject, this.distance_bodies_1);
 
-                            if (this.colidedObjects != null) {
-                                this.currentObject = this.colidedObjects.smallBody;
-                                this.secondObject = this.colidedObjects.bigBody;
+                            if (this.collidedGravityObjects != null) {
+                                this.currentObject = this.collidedGravityObjects.smallBody;
+                                this.secondObject = this.collidedGravityObjects.bigBody;
                             }
                         } else {
-                            this.colidedObjects = this.calculateCollision(this.currentObject, this.secondObject, this.distance_bodies_1);
+                            this.collidedGravityObjects = this.calculateCollision(this.currentObject, this.secondObject, this.distance_bodies_1);
 
-                            if (this.colidedObjects != null) {
-                                this.secondObject = this.colidedObjects.smallBody;
-                                this.currentObject = this.colidedObjects.bigBody;
+                            if (this.collidedGravityObjects != null) {
+                                this.secondObject = this.collidedGravityObjects.smallBody;
+                                this.currentObject = this.collidedGravityObjects.bigBody;
                             }
                         }
 
@@ -206,21 +232,23 @@ export class GravityEngine {
         return movingBody;
     }
 
+    public clearTracesStack(): void{
+        this._objectsTrajectoriesStack = [];
+    }
+
     //Trace the objects and store historical coordinates in a stack
     public updateObjectsTrajectoryStack(): void {
-        if (this._objectsTrajectoriesStack.length > this.objectsTrajectoryStackSize){
+        if (this._objectsTrajectoriesStack.length > this.objectsTrajectoryStackSize) {
             this._objectsTrajectoriesStack.shift(); //rem last
         }
 
         let traces: Coordinates[] = [];
 
-        for (let i = 0, len = this.gravitationalObjects.length; i < len; i++)
-        {
-            if (this.gravitationalObjects[i].v_x != 0 || this.gravitationalObjects[i].v_y != 0)
-            {
+        for (let i = 0, len = this.gravitationalObjects.length; i < len; i++) {
+            if (this.gravitationalObjects[i].v_x + this.gravitationalObjects[i].v_y != 0) {
                 traces.push({
-                    x: this.gravitationalObjects[i].x / this.gravitationalObjects,
-                    y: this.gravitationalObjects[i].y / this.gravitationalObjects
+                    x: this.gravitationalObjects[i].x,
+                    y: this.gravitationalObjects[i].y,
                 } as Coordinates);
             }
         }
