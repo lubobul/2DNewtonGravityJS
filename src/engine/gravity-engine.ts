@@ -2,6 +2,14 @@ import {Body, BodyForce, Collision} from "./types";
 import {Coordinates} from "../ui/types";
 
 export class GravityEngine {
+    get objectsTrajectoryStackSize(): number {
+        return this._objectsTrajectoryStackSize;
+    }
+
+    set objectsTrajectoryStackSize(value: number) {
+        this._objectsTrajectoryStackSize = value;
+    }
+
     get clampedDistanceBetweenObjectsEnabled(): boolean {
         return this._clampedDistanceBetweenObjectsEnabled;
     }
@@ -62,7 +70,7 @@ export class GravityEngine {
 
     private _objectsTrajectoriesStack: Coordinates[][] = [];
     //length of trace behind objects in number of kept calcukated positions
-    private objectsTrajectoryStackSize = 180;
+    private _objectsTrajectoryStackSize = 180;
 
     //This is the main function for calculating N object interaction, called 1ce per frame
     public calculateMultipleObjects(deltaTimeSeconds: number) {
@@ -118,11 +126,11 @@ export class GravityEngine {
 
                     this.tmp_F = this.calcForce2Bodies(this.currentObject, this.secondObject, this.distance_bodies_0);
 
-                    //calculate netforce for object i
+                    //calculate net force for object i
                     this.net_F_x += this.tmp_F.F_x;
                     this.net_F_y += this.tmp_F.F_y;
 
-                    //Colision
+                    //Collision
                     if (this._collisionEnabled) {
                         if (this.currentObject.mass < this.secondObject.mass) {
                             this.collidedGravityObjects = this.calculateCollision(this.secondObject, this.currentObject, this.distance_bodies_1);
@@ -153,8 +161,9 @@ export class GravityEngine {
         this.currentObject = this.calcCoordinates2Bodies(this.currentObject, this.net_F_x, this.net_F_y);
     }
 
-//Calculate if collision occurs, transfer mass and size if so. Returns null if no collision occrus.
-
+    //Calculate if collision occurs, transfer mass and size if so. Returns null if no collision occrus.
+    //TODO Refine that so that it has two modes - one is the exact overlapped area is transfered,
+    //second is - take the overlapped radius, and transfer the whole area for that % of the radius from outside towards the inside
     private calculateCollision(bigBody: Body, smallBody: Body, distance: number) {
         //checking out if collision occured r0 + r1 < distance
         if ((bigBody.diameter / 2 + smallBody.diameter / 2) < distance) return null;
@@ -232,13 +241,13 @@ export class GravityEngine {
         return movingBody;
     }
 
-    public clearTracesStack(): void{
+    public clearTracesStack(): void {
         this._objectsTrajectoriesStack = [];
     }
 
     //Trace the objects and store historical coordinates in a stack
     public updateObjectsTrajectoryStack(): void {
-        if (this._objectsTrajectoriesStack.length > this.objectsTrajectoryStackSize) {
+        if (this._objectsTrajectoriesStack.length > this._objectsTrajectoryStackSize) {
             this._objectsTrajectoriesStack.shift(); //rem last
         }
 

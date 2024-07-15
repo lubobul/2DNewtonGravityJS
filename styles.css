@@ -158,7 +158,7 @@ input.extra-width {
 .simulation-stats-wrapper{
     display: flex;
     flex-flow: column;
-    width: 8rem;
+    width: 12rem;
 }
 
 #canvas{

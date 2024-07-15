@@ -11,6 +11,15 @@ export class Canvas {
     get offsetY(): number {
         return this._offsetY;
     }
+
+    get height(): number {
+        return this.canvas.height;
+    }
+
+    get width(): number {
+        return this.canvas.width;
+    }
+
     private readonly _ctx: CanvasRenderingContext2D;
 
     private _offsetX = 0;

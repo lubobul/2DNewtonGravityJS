@@ -25,6 +25,7 @@ window.onload = () => {
     );
 
     uiControls.simulationEngine = simulationEngine;
+    uiControls.sandbox();
 
     simulationEngine.start();
 }
