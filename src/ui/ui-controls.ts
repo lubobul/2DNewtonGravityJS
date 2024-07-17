@@ -229,6 +229,14 @@ export class UiControls {
         this.simulationEngine.sizeDivisor = 1000000;
         this.simulationEngine.newBodyVelocityMultiplier = 5000;
 
+        this.simulationEngine.elapsedSimulationTimePerSecond = SECONDS_PER_DAY * 4;
+
+        this.simulationEngine.tracesEnabled = true;
+
+        (document.getElementById("object-traces") as any).checked = true;
+        document.getElementById("object-traces-checkbox-label").innerHTML = "Enabled";
+
+
         //Sun
         let sun = {
             ...BODIES.Sun

@@ -1,9 +1,13 @@
 export class AnimationEngine {
+    get isRunning(): boolean {
+        return this._isRunning;
+    }
+
     private animationFrameCallback: Function = null;
     private requestAnimationFrame: (callBack: Function) => void;
 
-    private previousTimeLog: number;
-    private isRunning: boolean = true;
+    private previousTimeLog: number = 0;
+    private _isRunning: boolean = false;
     public fps: number = 0;
     public delta_time = 0;
 
@@ -26,11 +30,21 @@ export class AnimationEngine {
         this.animationFrameCallback = callback;
     }
 
+    public resetClock(): void{
+        this.previousTimeLog = 0;
+        this.delta_time = 0;
+    }
+
     /**
      * Starts the animation engine
      */
     public start(): void {
-        this.isRunning = true;
+        if(this._isRunning){
+            return;
+        }
+        this.previousTimeLog = 0;
+        this.delta_time = 0;
+        this._isRunning = true;
         this.animate();
     }
 
@@ -38,7 +52,7 @@ export class AnimationEngine {
      * Stops the animation engine
      */
     public stop(): void {
-        this.isRunning = false;
+        this._isRunning = false;
     }
 
     /**
@@ -66,7 +80,7 @@ export class AnimationEngine {
 
         this.animationFrameCallback.call(this);
 
-        if (this.isRunning) 
+        if (this._isRunning)
         {
             requestAnimationFrame(()=>{
                 this.animate();  

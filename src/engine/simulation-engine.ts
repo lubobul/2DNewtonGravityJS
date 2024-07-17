@@ -43,11 +43,11 @@ export class SimulationEngine {
     }
 
     get isRunning(): boolean {
-        return this._isRunning;
+        return this.animationEngine.isRunning;
     }
 
     set isRunning(isRunning: boolean) {
-        this._isRunning = isRunning;
+        isRunning ? this.animationEngine.start() : this.animationEngine.stop();
     }
 
     get elapsedSimulationTimePerSecond(): number {
@@ -60,7 +60,6 @@ export class SimulationEngine {
 
     private _newBodyVelocityMultiplier = 50;
     private _elapsedSimulationTimePerSecond: number = 86400; //86400 secs = 1 day
-    private _isRunning = false;
     private _tracesEnabled = false;
     private elapsedSimulationDays = 0;
     private _distanceDivisor: number = 1000000; //TODO Change this when selecting different objects
@@ -90,9 +89,12 @@ export class SimulationEngine {
         this.animationEngine.setAnimationFrameCallback(this.tick.bind(this));
     }
 
+    public resetClock(): void{
+        this.animationEngine.resetClock();
+    }
+
     public start(): void {
         this.animationEngine.start();
-        this.isRunning = true;
     }
 
     public tick(): void {
@@ -108,7 +110,7 @@ export class SimulationEngine {
         this._canvas.initXYAxis();
 
         //That's where all dynamic calculations occur, called in a specific order
-        if (this._isRunning) {
+        if (this.isRunning) {
             ////Takes a lot of CPU - enable only for a single object...
             ////attempting to get long traces when slower
             if (this._tracesEnabled) {
@@ -274,6 +276,7 @@ export class SimulationEngine {
         this._canvas.initXYAxis();
         this.isRunning = true;
         this.tracesEnabled = false;
+        this.gravityEngine.clearTracesStack();
 
         this.gravityEngine.objectsTrajectoryStackSize = 180;
 
