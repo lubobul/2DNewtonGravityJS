@@ -83,12 +83,6 @@
                         <h4 class="stats second-stat" id="days">Days: </h4>
                         <h4 class="stats third-stat" id="fps">FPS: </h4>
                     </div>
-
-                    <div style="display:none;" class="object-stats-wrapper" id="object-stats-holder">
-                        <h4 style="position:relative;" class="stats" id="object-velocity-x">Velocity X: m/s</h4>
-                        <h4 style="position:relative;" class="stats" id="object-velocity-y">Velocity Y: m/s</h4>
-                        <h4 style="position:relative;" class="stats" id="object-speed">Speed: m/s</h4>
-                    </div>
                 </div>
 
                 <canvas id="canvas" tabindex="0"></canvas>
@@ -112,6 +106,11 @@
         <p>For new object - drag across the canvas</p>
         <p>For object stats - right click on object</p>
 
+    </div>
+    <div style="display:none;" class="object-stats-wrapper" id="object-stats-holder">
+        <h4 style="position:absolute;" class="stats" id="object-speed">Speed: m/s</h4>
+        <br>
+        <h4 style="position:absolute;" class="stats" id="object-mass">Mass: kg</h4>
     </div>
 
 <!--    <script src="animationEngine.js"></script>-->

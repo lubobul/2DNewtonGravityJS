@@ -149,19 +149,25 @@ export class UiControls {
             this._gravitationalObjectSelection = BODIES.Moon
         }
     }
-
-    private readonly fps_element = document.getElementById("fps");
     private accumulatedTimeUpdateFps: number = 1;
 
-//Update fps element
-    public updateFps(fps: number, delta_time: number): void {
-        if (this.accumulatedTimeUpdateFps < 0.5) {
+    public updateSimulationInfo(fps: number, daysElapsed: number, delta_time: number): void {
+        if (this.accumulatedTimeUpdateFps < 0.1) {
             this.accumulatedTimeUpdateFps += delta_time;
         } else {
             this.accumulatedTimeUpdateFps = 0;
-            this.fps_element.innerHTML = "FPS: " + Math.round(fps);
+            this.updateFps(fps);
+            this.updateDays(daysElapsed);
         }
     }
+
+    private readonly fps_element = document.getElementById("fps");
+
+//Update fps element
+    public updateFps(fps: number): void {
+        this.fps_element.innerHTML = "FPS: " + Math.round(fps);
+    }
+
 
     private readonly days_element = document.getElementById("days");
 
@@ -177,16 +183,37 @@ export class UiControls {
         this.speed_element.innerHTML = "Speed of time: " + this.simulationEngine.elapsedSimulationTimePerSecond + "x";
     }
 
-    private readonly obj_velocity_x_element = document.getElementById("object-velocity-x");
-    private readonly obj_velocity_y_element = document.getElementById("object-velocity-y");
-    private readonly obj_speed_element = document.getElementById("object-speed");
+    private readonly canvasHtmlElement = document.getElementById("canvas");
+    private readonly objStatsWrapper = document.getElementById("object-stats-holder");
+    private readonly objSpeedElement = document.getElementById("object-speed");
+    private readonly objMassElement = document.getElementById("object-mass");
 
 //Update object stats
     public updateObjectStats(body: Body): void {
-        this.obj_velocity_x_element.innerHTML = "Velocity X: " + Math.round(body.v_x) + "m/s";
-        this.obj_velocity_y_element.innerHTML = "Velocity Y: " + Math.round(body.v_y) + "m/s";
-        this.obj_speed_element.innerHTML = "Speed: " + Math.round(Math.sqrt(Math.pow(body.v_x, 2)
+
+        if(!body){
+            this.hideObjectStats();
+            return;
+        }
+
+        // Get the parent's offset
+        var parentOffset = this.canvasHtmlElement.getBoundingClientRect();
+
+        this.objSpeedElement.innerHTML = "Speed: " + Math.round(Math.sqrt(Math.pow(body.v_x, 2)
             + Math.pow(body.v_y, 2))) + "m/s";
+
+        this.objMassElement.innerHTML = "Mass: " + body.mass + "kg";
+
+        this.objStatsWrapper.style.left =
+            (body.x / this.simulationEngine.distanceDivisor) +
+            this.simulationEngine.canvas.offsetX +
+            parentOffset.left +
+            'px';
+        this.objStatsWrapper.style.top =
+            (body.y / this.simulationEngine.distanceDivisor * -1) +
+            this.simulationEngine.canvas.offsetY +
+            parentOffset.top +
+            'px';
     }
 
     private reset_delegate = this.sandbox.bind(this);

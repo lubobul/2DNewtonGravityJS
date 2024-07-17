@@ -152,7 +152,9 @@ input.extra-width {
 }
 
 .object-stats-wrapper{
-    margin-left: 1.2rem;
+    z-index: 999;
+    position: absolute;
+    width: 15rem;
 }
 
 .simulation-stats-wrapper{
