@@ -59,11 +59,11 @@ export class SimulationEngine {
     }
 
     private _newBodyVelocityMultiplier = 50;
-    private _elapsedSimulationTimePerSecond: number = 86400; //86400 secs = 1 day
+    private _elapsedSimulationTimePerSecond: number = SECONDS_PER_DAY; //86400 secs = 1 day
     private _tracesEnabled = false;
     private elapsedSimulationDays = 0;
-    private _distanceDivisor: number = 1000000; //TODO Change this when selecting different objects
-    private _sizeDivisor: number = 1000000; //TODO Change this when selecting different objects
+    private _distanceDivisor: number = 1000000;
+    private _sizeDivisor: number = 1000000;
     private selectedObjectForStatsIndex = -1;
     private readonly MAX_ALPHA = 0.3;
 
@@ -280,9 +280,9 @@ export class SimulationEngine {
         this.tracesEnabled = false;
         this.gravityEngine.clearTracesStack();
 
-        this.gravityEngine.objectsTrajectoryStackSize = 180;
+        this.gravityEngine.objectsTrajectoryStackSize = 181;
 
-        this.elapsedSimulationTimePerSecond = 86400; //86400 secs = 1 day
+        this.elapsedSimulationTimePerSecond = SECONDS_PER_DAY; //86400 secs = 1 day
 
         this.elapsedSimulationDays = 0;
         this.gravityEngine.gravitationalObjects = [];

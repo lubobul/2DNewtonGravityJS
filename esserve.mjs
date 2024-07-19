@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild';
 
-const context = await esbuild.build({
+const context = await esbuild.context({
     entryPoints: ['index.ts', "index.html", "styles.css"],
     format: "esm",
     bundle: true,
@@ -11,7 +11,7 @@ const context = await esbuild.build({
         ".html": "copy",
         ".css": "copy",
     },
-    tsconfig: "tsconfig.json",
+    tsconfig: "./tsconfig.json",
     plugins: [{
         name: 'watch-plugin',
         setup(build) {
@@ -24,3 +24,7 @@ const context = await esbuild.build({
         }
     }]
 });
+
+await context.watch();
+const serve = await context.serve({port: 8000});
+console.log("Serving on: ",  `http://${serve.host}:${serve.port}`);

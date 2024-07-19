@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node esbuild.mjs",
-    "start": "npm run build && esbuild --watch --servedir=./dist"
+    "start": "node esserve.mjs"
   },
   "repository": {
     "type": "git",
