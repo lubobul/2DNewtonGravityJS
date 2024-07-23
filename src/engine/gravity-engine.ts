@@ -162,26 +162,26 @@ export class GravityEngine {
     }
 
     //Calculate if collision occurs, transfer mass and size if so. Returns null if no collision occrus.
-    //TODO Refine that so that it has two modes - one is the exact overlapped area is transfered,
+    //TODO Refine that so that it has two modes - one is the exact overlapped area is transferred,
     //second is - take the overlapped radius, and transfer the whole area for that % of the radius from outside towards the inside
     private calculateCollision(bigBody: Body, smallBody: Body, distance: number) {
-        //checking out if collision occured r0 + r1 < distance
+        //checking out if collision occurred r0 + r1 < distance
         if ((bigBody.diameter / 2 + smallBody.diameter / 2) < distance) return null;
 
-        let affected_radius = 0;
+        let affectedRadius = 0;
 
         if (bigBody.diameter < distance) //center of small circle is outside the big circle
         {
-            affected_radius = Math.abs(distance - ((smallBody.diameter / 2) + (bigBody.diameter / 2)));
+            affectedRadius = Math.abs(distance - ((smallBody.diameter / 2) + (bigBody.diameter / 2)));
         } else if (distance + smallBody.diameter / 2 <= bigBody.diameter / 2) //the whole small one is inside the big one
         {
-            affected_radius = smallBody.diameter;
+            affectedRadius = smallBody.diameter;
         } else// the center of the small is inside the big, but portion of it is outside
         {
-            affected_radius = Math.abs(((bigBody.diameter / 2) - distance) + (smallBody.diameter / 2));
+            affectedRadius = Math.abs(((bigBody.diameter / 2) - distance) + (smallBody.diameter / 2));
         }
 
-        let affected_body_factor = affected_radius / smallBody.diameter;
+        let affected_body_factor = affectedRadius / smallBody.diameter;
 
         let mass_to_transfer = smallBody.mass * affected_body_factor;
 
@@ -192,12 +192,12 @@ export class GravityEngine {
         } else {
             bigBody.mass = bigBody.mass + mass_to_transfer;
             smallBody.mass = smallBody.mass - mass_to_transfer;
-            smallBody.diameter = smallBody.diameter - affected_radius;
+            smallBody.diameter = smallBody.diameter - affectedRadius;
         }
 
-        //Diameter exchange from small ot big body limited to affected_radius/ 2log(affected_radius)
+        //Diameter exchange from small ot big body limited to affectedRadius/ 2log(affectedRadius)
         //Later I would try and transfer surface area instead
-        bigBody.diameter = bigBody.diameter + (affected_radius / (Math.log(bigBody.diameter) / Math.LOG2E));
+        bigBody.diameter = bigBody.diameter + (affectedRadius / (Math.log(bigBody.diameter) / Math.LOG2E));
 
         return {
             smallBody: smallBody,

@@ -541,7 +541,7 @@ export class UiControls {
                     y: (((this.simulationEngine.canvas.height / 4 / obj_per_height) * j) - this.simulationEngine.canvas.offsetY / 4) * this.simulationEngine.distanceDivisor,
                     v_x: 0,
                     v_y: 0,
-                    mass: -7.35 * Math.pow(10, 22)
+                    mass: 7.35 * Math.pow(10, 22)
                 }
 
                 this.gravityEngine.gravitationalObjects.push(new_particle);
@@ -550,14 +550,20 @@ export class UiControls {
 
         this.gravityEngine.gravitationalObjects.push({
             ...BODIES.Jupiter,
-            mass: BODIES.Jupiter.mass * -1,
+            mass: BODIES.Jupiter.mass,
             v_x: 0,
             v_y: 0,
             x: 0,
             y: 0
         });
 
-        this.pauseUnpause();
+        setTimeout(() => {
+            this.gravityEngine.gravitationalObjects.forEach((body)=> {
+                body.mass *= -1;
+            });
+            this.pauseUnpause();
+
+        }, 100);
 
     }
 }

@@ -280,7 +280,7 @@ export class SimulationEngine {
         this.tracesEnabled = false;
         this.gravityEngine.clearTracesStack();
 
-        this.gravityEngine.objectsTrajectoryStackSize = 181;
+        this.gravityEngine.objectsTrajectoryStackSize = 180;
 
         this.elapsedSimulationTimePerSecond = SECONDS_PER_DAY; //86400 secs = 1 day
 
