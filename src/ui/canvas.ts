@@ -4,6 +4,7 @@ export class Canvas {
     get ctx(): CanvasRenderingContext2D {
         return this._ctx;
     }
+
     get offsetX(): number {
         return this._offsetX;
     }
@@ -32,7 +33,6 @@ export class Canvas {
                 public onMouseLeftClickUp?: (coordinates: Coordinates) => void,
                 public onMouseRightClickUp?: (coordinates: Coordinates) => void,
                 public onMouseMove?: (coordinates: Coordinates) => void,
-
     ) {
         this._ctx = this.canvas.getContext("2d");
 
@@ -42,6 +42,17 @@ export class Canvas {
         //Get Canvas Coordinates on click
         this.canvas.addEventListener("mousedown", this.mouseDown.bind(this), false);
         this.canvas.addEventListener("mouseup", this.mouseUp.bind(this), false);
+        this.resizeCanvasToFitContainer();
+        let timeout;
+
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => this.resizeCanvasToFitContainer(), 200);
+            }
+        });
+
+        resizeObserver.observe(canvasContainer);
     }
 
 
@@ -181,11 +192,11 @@ export class Canvas {
     }
 
     public resizeCanvasToFitContainer(): void {
-        if(!this.canvasContainer){
+        if (!this.canvasContainer) {
             return;
         }
 
-        if(this.canvas.width != this.canvasContainer.clientWidth || this.canvas.height != this.canvasContainer.clientHeight){
+        if (this.canvas.width != this.canvasContainer.clientWidth || this.canvas.height != this.canvasContainer.clientHeight) {
             this._ctx.canvas.width = this.canvasContainer.clientWidth;
             this._ctx.canvas.height = this.canvasContainer.clientHeight;
 

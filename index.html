@@ -14,14 +14,14 @@
 
     <div class="main-wrapper">
 
-        <div class="menu-options">
+        <div class="simulation-choice-menu">
+            <button class="simulation-option menu-options-button" onclick="uiControls.selectSimulationPreset('Sandbox', this)">Sandbox</button>
+            <button id="defaultChoice" class="simulation-option menu-options-button" onclick="uiControls.selectSimulationPreset('SolarSystem', this)">Solar System</button>
+            <button class="simulation-option menu-options-button" onclick="uiControls.selectSimulationPreset('Particles', this)">Particles</button>
+            <button class="simulation-option menu-options-button" onclick="uiControls.selectSimulationPreset('Attraction', this)">Attraction</button>
+            <button class="simulation-option menu-options-button" onclick="uiControls.selectSimulationPreset('Repulsion', this)">Repulsion</button>
+            <button class="simulation-option menu-options-button" onclick="uiControls.selectSimulationPreset('Explosion', this)">Explosion</button>
 
-            <button class="simulation-option menu-options-button" onclick="uiControls.sandbox()">Sandbox</button>
-            <button class="simulation-option menu-options-button" onclick="uiControls.planetaryMode()">Planetary Mode</button>
-            <button class="simulation-option menu-options-button" onclick="uiControls.particles()">Particles</button>
-            <button class="simulation-option menu-options-button" onclick="uiControls.particles2()">Attraction</button>
-            <button class="simulation-option menu-options-button" onclick="uiControls.particles3()">Repulsion</button>
-            <button class="simulation-option menu-options-button" onclick="uiControls.particles4()">Explosion</button>
             <button class="simulation-option menu-options-button" onclick="uiControls.about()">About</button>
         </div>
 

@@ -3,6 +3,7 @@ import {GravityEngine} from "../engine/gravity-engine";
 import {SimulationEngine} from "../engine/simulation-engine";
 import {BODIES, SECONDS_PER_DAY} from "../engine/constants";
 import {degToRad} from "../utils/math";
+import {SimulationChoice} from "./types";
 
 export class UiControls {
     get gravitationalObjectSelection(): Body {
@@ -149,6 +150,7 @@ export class UiControls {
             this._gravitationalObjectSelection = BODIES.Moon
         }
     }
+
     private accumulatedTimeUpdateFps: number = 1;
 
     public updateSimulationInfo(fps: number, daysElapsed: number, delta_time: number): void {
@@ -191,7 +193,7 @@ export class UiControls {
 //Update object stats
     public updateObjectStats(body: Body): void {
 
-        if(!body){
+        if (!body) {
             this.hideObjectStats();
             return;
         }
@@ -218,13 +220,46 @@ export class UiControls {
 
     private reset_delegate = this.sandbox.bind(this);
 
-    public  resetSimulation(): void {
-        if(this.reset_delegate){
+    public resetSimulation(): void {
+        if (this.reset_delegate) {
             this.reset_delegate();
         }
     }
 
-    public sandbox(): void {
+    public selectSimulationPreset(choice: SimulationChoice, button: HTMLElement): void {
+
+        // Remove active class from all buttons
+        var buttons = document.querySelectorAll('.simulation-choice-menu button');
+        buttons.forEach(function(btn) {
+            btn.classList.remove('btn-active');
+        });
+
+        // Add active class to the clicked button
+        button.classList.add('btn-active');
+
+        switch (choice) {
+            case SimulationChoice.Sandbox:
+                this.sandbox();
+                break;
+            case SimulationChoice.SolarSystem:
+                this.solarSystem();
+                break;
+            case SimulationChoice.Particles:
+                this.particles();
+                break;
+            case SimulationChoice.Attraction:
+                this.attraction();
+                break;
+            case SimulationChoice.Repulsion:
+                this.repulsion();
+                break;
+            case SimulationChoice.Explosion:
+                this.explosion();
+                break;
+        }
+    }
+
+    private sandbox(): void {
         this.showTracesOption();
 
         this.reset_delegate = this.sandbox.bind(this);
@@ -241,11 +276,11 @@ export class UiControls {
         this.updateSpeedOfTime();
     }
 
-    public planetaryMode(): void {
+    private solarSystem(): void {
 
         this.showTracesOption();
 
-        this.reset_delegate = this.planetaryMode.bind(this);
+        this.reset_delegate = this.solarSystem.bind(this);
 
         this.simulationEngine.resetSimulation();
         this.resetUiControls();
@@ -338,7 +373,7 @@ export class UiControls {
         this.updateSpeedOfTime();
     }
 
-    public particles(): void {
+    private particles(): void {
         //this.hideTracesOption();
 
         this.simulationEngine.resetSimulation();
@@ -362,10 +397,8 @@ export class UiControls {
 
         let new_particle: Body;
 
-        for (let i = 1; i <= obj_per_width; i++)
-        {
-            for (let j = 1; j <= obj_per_height; j++)
-            {
+        for (let i = 1; i <= obj_per_width; i++) {
+            for (let j = 1; j <= obj_per_height; j++) {
                 new_particle = {
                     color: "black",
                     diameter: 3474000,
@@ -383,7 +416,7 @@ export class UiControls {
         this.pauseUnpause();
     }
 
-    public particles2(): void {
+    public attraction(): void {
         //this.hideTracesOption();
 
         this.simulationEngine.resetSimulation();
@@ -395,7 +428,7 @@ export class UiControls {
 
         document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
-        this.reset_delegate = this.particles2.bind(this);
+        this.reset_delegate = this.attraction.bind(this);
 
         this.simulationEngine.elapsedSimulationTimePerSecond = SECONDS_PER_DAY / 30;
 
@@ -408,10 +441,8 @@ export class UiControls {
 
         let new_particle: Body;
 
-        for (let i = 1; i <= obj_per_width; i++)
-        {
-            for (let j = 1; j <= obj_per_height; j++)
-            {
+        for (let i = 1; i <= obj_per_width; i++) {
+            for (let j = 1; j <= obj_per_height; j++) {
                 new_particle = {
                     color: "black",
                     diameter: 2474000,
@@ -445,7 +476,7 @@ export class UiControls {
         this.pauseUnpause();
     }
 
-    public particles3(): void {
+    private repulsion(): void {
 
         this.simulationEngine.resetSimulation();
         this.resetUiControls();
@@ -455,7 +486,7 @@ export class UiControls {
 
         document.getElementById("clamped-distance-checkbox-label").innerHTML = "Obj1.r + Obj2.r";
 
-        this.reset_delegate = this.particles3.bind(this);
+        this.reset_delegate = this.repulsion.bind(this);
 
         this.simulationEngine.elapsedSimulationTimePerSecond = SECONDS_PER_DAY / 40;
 
@@ -505,7 +536,7 @@ export class UiControls {
         this.pauseUnpause();
     }
 
-    public particles4(): void {
+    private explosion(): void {
 
         this.simulationEngine.resetSimulation();
         this.resetUiControls();
@@ -519,7 +550,7 @@ export class UiControls {
         (document.getElementById("collision") as any).checked = true;
         document.getElementById("object-collision-checkbox-label").innerHTML = "Enabled";
 
-        this.reset_delegate = this.particles4.bind(this);
+        this.reset_delegate = this.explosion.bind(this);
 
         this.simulationEngine.elapsedSimulationTimePerSecond = SECONDS_PER_DAY / 30;
 
@@ -558,7 +589,7 @@ export class UiControls {
         });
 
         setTimeout(() => {
-            this.gravityEngine.gravitationalObjects.forEach((body)=> {
+            this.gravityEngine.gravitationalObjects.forEach((body) => {
                 body.mass *= -1;
             });
             this.pauseUnpause();

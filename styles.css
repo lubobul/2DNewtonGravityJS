@@ -83,7 +83,7 @@ input.extra-width {
     cursor: pointer;
     padding: 5px 15px;
     margin-top: 10px;
-    background: gray;
+    background-color: gray;
     border: 1px solid #7e7e7e;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -100,6 +100,16 @@ input.extra-width {
     -webkit-box-shadow: 0 0 1px rgba(0,0,0, .75);
     -moz-box-shadow: 0 0 1px rgba(0,0,0, .75);
     box-shadow: 0 0 1px rgba(0,0,0, .75);
+}
+
+.btn-active{
+    color: gray;
+    background-color: #f3f3f3;
+}
+
+.btn-active:hover{
+    color: gray;
+    background-color: #f3f3f3;
 }
 
 #header {
@@ -184,13 +194,17 @@ input.extra-width {
     color: gray;
 }
 
-.menu-options {
+.simulation-choice-menu {
     display: flex;
 }
 
 .menu-options-button {
     margin-right: 0.2em;
-    float: left;
+}
+
+.menu-options-button:last-child {
+    margin-left: auto;
+    margin-right: 0;
 }
 
 .my-popup {

@@ -98,8 +98,6 @@ export class SimulationEngine {
     }
 
     public tick(): void {
-        this._canvas.resizeCanvasToFitContainer();
-
         // t - time between calculting new positions
         const simulationDeltaTime = this.elapsedSimulationTimePerSecond * this.animationEngine.delta_time;
 
@@ -120,6 +118,10 @@ export class SimulationEngine {
             this.elapsedSimulationDays += (this.animationEngine.delta_time * this.elapsedSimulationTimePerSecond) / SECONDS_PER_DAY;
         }
 
+        if (this._tracesEnabled) {
+            this.drawTraces();
+        }
+
         this.drawObjectsInTheSimulation();
         this.uiControls.updateSimulationInfo(this.animationEngine.fps, this.elapsedSimulationDays, this.animationEngine.delta_time);
 
@@ -129,10 +131,6 @@ export class SimulationEngine {
             if(!body){
                 this.selectedObjectForStatsIndex = -1;
             }
-        }
-
-        if (this._tracesEnabled) {
-            this.drawTraces();
         }
 
         this.newObjectDirectionVector();

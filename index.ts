@@ -3,6 +3,7 @@ import {UiControls} from "./src/ui/ui-controls";
 import {GravityEngine} from "./src/engine/gravity-engine";
 import {SimulationEngine} from "./src/engine/simulation-engine";
 import {Canvas} from "./src/ui/canvas";
+import {SimulationChoice} from "./src/ui/types";
 export * from "./src/ui/ui-controls";
 window.onload = () => {
     const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
@@ -23,7 +24,10 @@ window.onload = () => {
     );
 
     uiControls.simulationEngine = simulationEngine;
-    uiControls.planetaryMode();
+
+    //Preselect default simulation preset
+    const button = document.getElementById("defaultChoice");
+    uiControls.selectSimulationPreset(SimulationChoice.SolarSystem, button);
 
     simulationEngine.start();
 
